@@ -1,0 +1,739 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+      "GetServiceSuccessResponse": {
+        "description": "GetServiceSuccessResponse Object",
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServiceResponse"
+        }
+      },
+      "GetAllServiceSuccessResponse": {
+        "description": "GetAllServiceSuccessResponse Object",
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/ServiceResponse"
+        }
+      },
+      "CreateServiceRequest": {
+        "description": "CreateServiceRequest Object",
+        "type": "object",
+        "properties": {
+          "ephemeral": {
+            "type": "boolean",
+            "description": "服务注册类型。true：临时注册；false：持久注册"
+          },
+          "name": {
+            "type": "string",
+            "description": "服务名称"
+          },
+          "retries": {
+            "type": "integer",
+            "description": "连接失败重试次数",
+            "default": 5
+          },
+          "protocol": {
+            "type": "string",
+            "description": "传输协议类型",
+            "default": "http"
+          },
+          "host": {
+            "type": "string",
+            "description": "后端服务域名/IP"
+          },
+          "port": {
+            "type": "integer",
+            "description": "后端服务端口"
+          },
+          "path": {
+            "type": "string",
+            "description": "服务路径"
+          },
+          "connect_timeout": {
+            "type": "integer",
+            "description": "连接超时时间（毫秒）",
+            "default": 60000
+          },
+          "write_timeout": {
+            "type": "integer",
+            "description": "写入超时时间（毫秒）",
+            "default": 60000
+          },
+          "read_timeout": {
+            "type": "integer",
+            "description": "读取超时时间（毫秒）",
+            "default": 60000
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "自定义标签（例如[namespacea,group=x]）"
+          },
+          "health_status": {
+            "type": "string",
+            "description": "服务健康状态",
+            "default": "healthy"
+          },
+          "ephemeral_check": {
+            "$ref": "#/definitions/EphemeralCheck",
+            "description": "Ephemeral check configuration"
+          },
+          "persistent_check": {
+            "$ref": "#/definitions/PersistentCheck",
+            "description": "Persistent check configuration"
+          },
+          "agent_protocol": {
+            "type": "string",
+            "description": "Agent/Tool服务通信协议"
+          },
+          "agent_info": {
+            "type": "object",
+            "description": "不同agent_protocol对应的特有内容"
+          },
+          "agent_info_url": {
+            "type": "string",
+            "description": "agent_info为空时，从agent_info_url获取agent_protocol内容"
+          }
+        },
+        "required": [
+          "name",
+          "host",
+          "port",
+          "protocol"
+        ],
+        "additionalProperties": true
+      },
+      "UpdateServiceRequest": {
+        "description": "UpdateServiceRequest Object",
+        "type": "object",
+        "properties": {
+          "ephemeral": {
+            "type": "boolean",
+            "description": "服务注册类型。true：临时注册；false：持久注册"
+          },
+          "name": {
+            "type": "string",
+            "description": "服务名称"
+          },
+          "retries": {
+            "type": "integer",
+            "description": "连接失败重试次数",
+            "default": 5
+          },
+          "protocol": {
+            "type": "string",
+            "description": "传输协议类型",
+            "default": "http"
+          },
+          "host": {
+            "type": "string",
+            "description": "后端服务域名/IP"
+          },
+          "port": {
+            "type": "integer",
+            "description": "后端服务端口"
+          },
+          "path": {
+            "type": "string",
+            "description": "服务路径"
+          },
+          "connect_timeout": {
+            "type": "integer",
+            "description": "连接超时时间（毫秒）",
+            "default": 60000
+          },
+          "write_timeout": {
+            "type": "integer",
+            "description": "写入超时时间（毫秒）",
+            "default": 60000
+          },
+          "read_timeout": {
+            "type": "integer",
+            "description": "读取超时时间（毫秒）",
+            "default": 60000
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "自定义标签（例如[namespacea,group=x]）"
+          },
+          "health_status": {
+            "type": "string",
+            "description": "服务健康状态",
+            "default": "healthy"
+          },
+          "ephemeral_check": {
+            "$ref": "#/definitions/EphemeralCheck",
+            "description": "Ephemeral check configuration"
+          },
+          "persistent_check": {
+            "$ref": "#/definitions/PersistentCheck",
+            "description": "Persistent check configuration"
+          },
+          "agent_protocol": {
+            "type": "string",
+            "description": "Agent/Tool服务通信协议"
+          },
+          "agent_info": {
+            "type": "object",
+            "description": "不同agent_protocol对应的特有内容"
+          },
+          "agent_info_url": {
+            "type": "string",
+            "description": "agent_info为空时，从agent_info_url获取agent_protocol内容"
+          }
+        },
+        "required": [
+          "name",
+          "host",
+          "port",
+          "protocol"
+        ],
+        "additionalProperties": true
+      },
+      "ServiceResponse": {
+        "description": "Service Object",
+        "type": "object",
+        "properties": {
+          "ephemeral": {
+            "type": "boolean",
+            "description": "服务注册类型。true：临时注册；false：持久注册"
+          },
+          "id": {
+            "type": "string",
+            "description": "服务唯一标识符"
+          },
+          "created_at": {
+            "type": "integer",
+            "description": "记录创建时间（由注册中心设置）"
+          },
+          "updated_at": {
+            "type": "integer",
+            "description": "记录最后更新时间（由注册中心设置）"
+          },
+          "index": {
+            "type": "integer",
+            "description": "服务更新序号"
+          },
+          "name": {
+            "type": "string",
+            "description": "服务名称"
+          },
+          "retries": {
+            "type": "integer",
+            "description": "连接失败重试次数",
+            "default": 5
+          },
+          "protocol": {
+            "type": "string",
+            "description": "传输协议类型",
+            "default": "http"
+          },
+          "host": {
+            "type": "string",
+            "description": "后端服务域名/IP"
+          },
+          "port": {
+            "type": "integer",
+            "description": "后端服务端口"
+          },
+          "path": {
+            "type": "string",
+            "description": "服务路径"
+          },
+          "connect_timeout": {
+            "type": "integer",
+            "description": "连接超时时间（毫秒）",
+            "default": 60000
+          },
+          "write_timeout": {
+            "type": "integer",
+            "description": "写入超时时间（毫秒）",
+            "default": 60000
+          },
+          "read_timeout": {
+            "type": "integer",
+            "description": "读取超时时间（毫秒）",
+            "default": 60000
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "自定义标签（例如[namespacea,group=x]）"
+          },
+          "health_status": {
+            "type": "string",
+            "description": "服务健康状态",
+            "default": "healthy"
+          },
+          "ephemeral_check": {
+            "$ref": "#/definitions/EphemeralCheck",
+            "description": "Ephemeral check configuration"
+          },
+          "persistent_check": {
+            "$ref": "#/definitions/PersistentCheck",
+            "description": "Persistent check configuration"
+          },
+          "agent_protocol": {
+            "type": "string",
+            "description": "Agent/Tool服务通信协议"
+          },
+          "agent_info": {
+            "type": "object",
+            "description": "不同agent_protocol对应的特有内容"
+          },
+          "agent_info_url": {
+            "type": "string",
+            "description": "agent_info为空时，从agent_info_url获取agent_protocol内容"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": true
+      },
+      "CreateRouteRequest": {
+        "description": "CreateRouteRequest Object",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "路由名称"
+          },
+          "gateway_id": {
+            "type": "string",
+            "description": "此路由关联的网关标识"
+          },
+          "protocols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "支持的协议列表"
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "匹配的HTTP方法列表"
+          },
+          "hosts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "匹配的Host列表"
+          },
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "匹配的路径"
+          },
+          "headers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "匹配的请求头"
+          },
+          "https_redirect_status_code": {
+            "type": "integer",
+            "description": "协议不匹配时的重定向状态码"
+          },
+          "regex_priority": {
+            "type": "integer",
+            "description": "正则匹配优先级"
+          },
+          "strip_path": {
+            "type": "boolean",
+            "description": "是否移除路径前缀"
+          },
+          "preserve_host": {
+            "type": "boolean",
+            "description": "是否保留原始请求的Host头"
+          },
+          "request_buffering": {
+            "type": "boolean",
+            "description": "是否缓冲请求体数据"
+          },
+          "response_buffering": {
+            "type": "boolean",
+            "description": "是否缓冲响应体数据"
+          },
+          "snis": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "支持的SNI列表"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "允许的源IP列表"
+          },
+          "destinations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "目标服务地址列表"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "路由标签"
+          },
+          "agent_protocol": {
+            "type": "string",
+            "description": "Agent/Tool通信协议"
+          },
+          "service": {
+            "type": "string",
+            "description": "关联的服务名"
+          }
+        },
+        "required": [
+          "name",
+          "service"
+        ],
+        "additionalProperties": false
+      },
+      "UpdateRouteRequest": {
+        "description": "UpdateRouteRequest Object",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "路由名称"
+          },
+          "gateway_id": {
+            "type": "string",
+            "description": "此路由关联的网关标识"
+          },
+          "protocols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "支持的协议列表"
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "匹配的HTTP方法列表"
+          },
+          "hosts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "匹配的Host列表"
+          },
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "匹配的路径"
+          },
+          "headers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "匹配的请求头"
+          },
+          "https_redirect_status_code": {
+            "type": "integer",
+            "description": "协议不匹配时的重定向状态码"
+          },
+          "regex_priority": {
+            "type": "integer",
+            "description": "正则匹配优先级"
+          },
+          "strip_path": {
+            "type": "boolean",
+            "description": "是否移除路径前缀"
+          },
+          "preserve_host": {
+            "type": "boolean",
+            "description": "是否保留原始请求的Host头"
+          },
+          "request_buffering": {
+            "type": "boolean",
+            "description": "是否缓冲请求体数据"
+          },
+          "response_buffering": {
+            "type": "boolean",
+            "description": "是否缓冲响应体数据"
+          },
+          "snis": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "支持的SNI列表"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "允许的源IP列表"
+          },
+          "destinations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "目标服务地址列表"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "路由标签"
+            
+          },
+          "agent_protocol": {
+            "type": "string",
+            "description": "Agent/Tool通信协议"
+          },
+          "service": {
+            "type": "string",
+            "description": "关联的服务名"
+          }
+        },
+        "required": [
+          "name",
+          "service"
+        ],
+        "additionalProperties": false
+      },
+      "GetAllRoutesSuccessResponse": {
+        "description": "GetAllRoutesSuccessResponse Object",
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/RouteResponse"
+        }
+      },
+      "GetRotueSuccessResponse": {
+        "description": "GetRotueSuccessResponse Object",
+        "$ref": "#/definitions/RouteResponse"
+      },
+      "RouteResponse": {
+        "description": "RouteResponse Object",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "路由唯一标识"
+          },
+          "created_at": {
+            "type": "integer",
+            "description": "记录创建时间（由注册中心设置）"
+          },
+          "updated_at": {
+            "type": "integer",
+            "description": "记录最后更新时间（由注册中心设置）"
+          },
+          "index": {
+            "type": "integer",
+            "description": "路由更新序号"
+          },
+          "name": {
+            "type": "string",
+            "description": "路由名称"
+          },
+          "gateway_id": {
+            "type": "string",
+            "description": "此路由关联的网关标识"
+          },
+          "protocols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "支持的协议列表"
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "匹配的HTTP方法列表"
+          },
+          "hosts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "匹配的Host列表"
+          },
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "匹配的路径"
+          },
+          "headers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "匹配的请求头"
+          },
+          "https_redirect_status_code": {
+            "type": "integer",
+            "description": "协议不匹配时的重定向状态码"
+          },
+          "regex_priority": {
+            "type": "integer",
+            "description": "正则匹配优先级"
+          },
+          "strip_path": {
+            "type": "boolean",
+            "description": "是否移除路径前缀"
+          },
+          "preserve_host": {
+            "type": "boolean",
+            "description": "是否保留原始请求的Host头"
+          },
+          "request_buffering": {
+            "type": "boolean",
+            "description": "是否缓冲请求体数据"
+          },
+          "response_buffering": {
+            "type": "boolean",
+            "description": "是否缓冲响应体数据"
+          },
+          "snis": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "支持的SNI列表"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "允许的源IP列表"
+          },
+          "destinations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "目标服务地址列表"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "路由标签"
+          },
+          "agent_protocol": {
+            "type": "string",
+            "description": "Agent/Tool通信协议"
+          },
+          "service": {
+            "type": "string",
+            "description": "关联的服务名"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "PersistentCheck": {
+        "description": "Persistent health check configuration",
+        "type": "object",
+        "properties": {
+          "check_type": {
+            "type": "string",
+            "description": "健康检查类型：HTTP/HTTPS"
+          },
+          "check_interval": {
+            "type": "string",
+            "description": "健康检查时间间隔",
+            "default": "15s"
+          },
+          "check_timeout": {
+            "type": "string",
+            "description": "健康检查超时时间",
+            "default": "5s"
+          },
+          "check_unhealthy_timeout": {
+            "type": "string",
+            "description": "服务超期健康检查一直未成功则不健康",
+            "default": "60s"
+          },
+          "check_http_url": {
+            "type": "string",
+            "description": "健康检查URL地址，示例：/healthcheck"
+          },
+          "check_http_method": {
+            "type": "string",
+            "description": "HTTP, HTTPS健康检查使用的HTTP 方法：GET, HEAD, OPTIONS"
+          }
+        },
+        "required": [
+          "check_type",
+          "check_http_url"
+        ],
+        "additionalProperties": false
+      },
+      "EphemeralCheck": {
+        "description": "ephemeral check configuration",
+        "type": "object",
+        "properties": {
+          "check_type": {
+            "type": "string",
+            "description": "健康检查类型：TTL",
+            "default": "TTL"
+          },
+          "renewal_delete_timeout": {
+            "type": "string",
+            "description": "服务超期未更新则删除",
+            "default": "60s"
+          },
+          "renewal_interval": {
+            "type": "string",
+            "description": "服务更新周期",
+            "default": "15s"
+          },
+          "renewal_unhealthy_timeout": {
+            "type": "string",
+            "description": "服务超期未更新则不健康",
+            "default": "30s"
+          }
+        },
+        "required": [
+          "check_type"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }

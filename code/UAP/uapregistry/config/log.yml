@@ -1,0 +1,14 @@
+#level:Emergency、Alert、Critical、Error、
+#Warn、Notice、Info、Debug
+console:
+  level: Info
+file:
+  filename: ../uapregistry-works/logs/uapregistry.log
+  level: Info
+  maxlines: 300000
+  #metric:M
+  maxsize: 20
+  daily: false
+  maxdays: 3
+  rotate: true
+  perm: 0640

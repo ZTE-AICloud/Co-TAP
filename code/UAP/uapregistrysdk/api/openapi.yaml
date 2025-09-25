@@ -1,0 +1,1045 @@
+openapi: 3.0.0
+info:
+  description: API for managing services
+  title: Service API
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /services:
+    get:
+      description: Retrieve a list of all services
+      parameters:
+      - description: wait seconds
+        explode: true
+        in: query
+        name: wait
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: index
+        explode: true
+        in: query
+        name: index
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Service"
+                type: array
+          description: Successful operation
+        "500":
+          description: Internal Server Error
+      summary: Get all services
+    post:
+      description: Create a new service
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateServiceRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+          description: Service created successfully
+        "400":
+          description: Bad request
+        "409":
+          description: Conflict - Service already exists
+        "422":
+          description: Unprocessable Entity - Invalid service parameters
+        "500":
+          description: Internal Server Error
+      summary: Create a new service
+  /services/{serviceName}:
+    get:
+      description: Retrieve services by serviceName
+      parameters:
+      - description: Name of the service to retrieve
+        explode: false
+        in: path
+        name: serviceName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: wait seconds
+        explode: true
+        in: query
+        name: wait
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: index
+        explode: true
+        in: query
+        name: index
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Service"
+                type: array
+          description: Successful operation
+        "500":
+          description: Internal Server Error
+      summary: Get service by name
+  /services/{id}:
+    delete:
+      description: Delete an existing service
+      parameters:
+      - description: ID of the service to delete
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Service deleted successfully
+        "500":
+          description: Internal Server Error
+      summary: Delete a service
+    patch:
+      description: Update an existing service
+      parameters:
+      - description: ID of the service to update
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchServiceRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+          description: Service updated successfully
+        "400":
+          description: Bad request
+        "404":
+          description: Service not Found
+        "422":
+          description: Unprocessable Entity - Invalid service parameters
+        "500":
+          description: Internal Server Error
+      summary: Update a service
+  /services/{id}/renewal:
+    put:
+      description: Renewal a service
+      parameters:
+      - description: ID of the service to renewal
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Service renewaled successfully
+        "404":
+          description: Service not Found
+        "500":
+          description: Internal Server Error
+      summary: Renewal a service
+  /routes:
+    get:
+      parameters:
+      - description: wait seconds
+        explode: true
+        in: query
+        name: wait
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: index
+        explode: true
+        in: query
+        name: index
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Route"
+                type: array
+          description: OK
+        "500":
+          description: Internal Server Error
+      summary: Get all routes
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRouteRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Route"
+          description: Created
+        "400":
+          description: Bad Request
+        "409":
+          description: Conflict
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+      summary: Register a new route
+  /routes/{routeName}:
+    delete:
+      parameters:
+      - explode: false
+        in: path
+        name: routeName
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+      summary: Delete a route
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: routeName
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: wait seconds
+        explode: true
+        in: query
+        name: wait
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: index
+        explode: true
+        in: query
+        name: index
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Route"
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get a route by name
+    put:
+      parameters:
+      - explode: false
+        in: path
+        name: routeName
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRouteRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Route"
+          description: OK
+        "400":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Bad Request
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+      summary: Update a route
+components:
+  schemas:
+    EphemeralCheck:
+      additionalProperties: false
+      description: Ephemeral check configuration
+      example:
+        renewal_unhealthy_timeout: 30s
+        renewal_delete_timeout: 60s
+        check_type: TTL
+        renewal_interval: 15s
+      properties:
+        check_type:
+          default: TTL
+          description: 健康检查类型：TTL
+          type: string
+        renewal_delete_timeout:
+          default: 60s
+          description: 服务超期未更新则删除
+          type: string
+        renewal_interval:
+          default: 15s
+          description: 服务更新周期
+          type: string
+        renewal_unhealthy_timeout:
+          default: 30s
+          description: 服务超期未更新则不健康
+          type: string
+      required:
+      - check_type
+      type: object
+    PersistentCheck:
+      additionalProperties: false
+      description: Persistent health check configuration
+      example:
+        check_interval: 15s
+        check_http_method: check_http_method
+        check_type: check_type
+        check_timeout: 5s
+        check_http_url: check_http_url
+        check_unhealthy_timeout: 60s
+      properties:
+        check_type:
+          description: 健康检查类型：HTTP/HTTPS
+          type: string
+        check_interval:
+          default: 15s
+          description: 健康检查时间间隔
+          type: string
+        check_timeout:
+          default: 5s
+          description: 健康检查超时时间
+          type: string
+        check_unhealthy_timeout:
+          default: 60s
+          description: 服务超期健康检查一直未成功则不健康
+          type: string
+        check_http_url:
+          description: 健康检查URL地址，示例：/healthcheck
+          type: string
+        check_http_method:
+          description: "HTTP, HTTPS健康检查使用的HTTP 方法：GET, HEAD, OPTIONS"
+          type: string
+      required:
+      - check_http_url
+      - check_type
+      type: object
+    CreateServiceRequest:
+      additionalProperties: true
+      description: Schema for service creation requests
+      example:
+        agent_protocol: agent_protocol
+        connect_timeout: 1
+        ephemeral: true
+        tags:
+        - tags
+        - tags
+        agent_info_url: agent_info_url
+        retries: 0
+        path: path
+        protocol: protocol
+        port: 6
+        ephemeral_check:
+          renewal_unhealthy_timeout: 30s
+          renewal_delete_timeout: 60s
+          check_type: TTL
+          renewal_interval: 15s
+        persistent_check:
+          check_interval: 15s
+          check_http_method: check_http_method
+          check_type: check_type
+          check_timeout: 5s
+          check_http_url: check_http_url
+          check_unhealthy_timeout: 60s
+        agent_info: "{}"
+        write_timeout: 5
+        name: name
+        host: host
+        read_timeout: 5
+      properties:
+        ephemeral:
+          description: 服务注册类型。true：临时注册；false：持久注册
+          type: boolean
+        name:
+          description: 服务名称
+          type: string
+        retries:
+          description: 连接失败重试次数
+          type: integer
+        protocol:
+          description: 传输协议类型
+          type: string
+        host:
+          description: 后端服务域名/IP
+          type: string
+        port:
+          description: 后端服务端口
+          type: integer
+        path:
+          description: 服务路径
+          type: string
+        connect_timeout:
+          description: 连接超时时间（毫秒）
+          type: integer
+        write_timeout:
+          description: 写入超时时间（毫秒）
+          type: integer
+        read_timeout:
+          description: 读取超时时间（毫秒）
+          type: integer
+        tags:
+          description: "自定义标签（例如[namespacea,group=x]）"
+          items:
+            type: string
+          type: array
+        ephemeral_check:
+          $ref: "#/components/schemas/EphemeralCheck"
+        persistent_check:
+          $ref: "#/components/schemas/PersistentCheck"
+        agent_protocol:
+          description: Agent/Tool服务通信协议
+          type: string
+        agent_info:
+          description: 不同agent_protocol对应的特有内容
+          type: object
+        agent_info_url:
+          description: agent_info为空时，从agent_info_url获取agent_protocol内容
+          type: string
+      required:
+      - host
+      - name
+      - port
+      - protocol
+      type: object
+    CreateRouteRequest:
+      additionalProperties: false
+      example:
+        headers:
+        - headers
+        - headers
+        request_buffering: true
+        agent_protocol: agent_protocol
+        sources:
+        - sources
+        - sources
+        methods:
+        - methods
+        - methods
+        hosts:
+        - hosts
+        - hosts
+        https_redirect_status_code: 0
+        destinations:
+        - destinations
+        - destinations
+        preserve_host: true
+        gateway_id: gateway_id
+        strip_path: true
+        response_buffering: true
+        tags:
+        - tags
+        - tags
+        snis:
+        - snis
+        - snis
+        paths:
+        - paths
+        - paths
+        service: service
+        name: name
+        regex_priority: 6
+        protocols:
+        - protocols
+        - protocols
+      properties:
+        name:
+          description: 路由名称
+          type: string
+        gateway_id:
+          description: 此路由关联的网关标识
+          type: string
+        protocols:
+          description: 支持的协议列表
+          items:
+            type: string
+          type: array
+        methods:
+          description: 匹配的HTTP方法列表
+          items:
+            type: string
+          type: array
+        hosts:
+          description: 匹配的Host列表
+          items:
+            type: string
+          type: array
+        paths:
+          description: 匹配的路径
+          items:
+            type: string
+          type: array
+        headers:
+          description: 匹配的请求头
+          items:
+            type: string
+          type: array
+        https_redirect_status_code:
+          description: 协议不匹配时的重定向状态码
+          type: integer
+        regex_priority:
+          description: 正则匹配优先级
+          type: integer
+        strip_path:
+          description: 是否移除路径前缀
+          type: boolean
+        preserve_host:
+          description: 是否保留原始请求的Host头
+          type: boolean
+        request_buffering:
+          description: 是否缓冲请求体数据
+          type: boolean
+        response_buffering:
+          description: 是否缓冲响应体数据
+          type: boolean
+        snis:
+          description: 支持的SNI列表
+          items:
+            type: string
+          type: array
+        sources:
+          description: 允许的源IP列表
+          items:
+            type: string
+          type: array
+        destinations:
+          description: 目标服务地址列表
+          items:
+            type: string
+          type: array
+        tags:
+          description: 路由标签
+          items:
+            type: string
+          type: array
+        agent_protocol:
+          description: Agent/Tool通信协议
+          type: string
+        service:
+          description: 关联的服务名
+          type: string
+      required:
+      - name
+      type: object
+    UpdateRouteRequest:
+      additionalProperties: false
+      example:
+        headers:
+        - headers
+        - headers
+        request_buffering: true
+        agent_protocol: agent_protocol
+        sources:
+        - sources
+        - sources
+        methods:
+        - methods
+        - methods
+        hosts:
+        - hosts
+        - hosts
+        https_redirect_status_code: 0
+        destinations:
+        - destinations
+        - destinations
+        preserve_host: true
+        gateway_id: gateway_id
+        strip_path: true
+        response_buffering: true
+        tags:
+        - tags
+        - tags
+        snis:
+        - snis
+        - snis
+        paths:
+        - paths
+        - paths
+        service: service
+        name: name
+        regex_priority: 6
+        protocols:
+        - protocols
+        - protocols
+      properties:
+        name:
+          description: 路由名称
+          type: string
+        gateway_id:
+          description: 此路由关联的网关标识
+          type: string
+        protocols:
+          description: 支持的协议列表
+          items:
+            type: string
+          type: array
+        methods:
+          description: 匹配的HTTP方法列表
+          items:
+            type: string
+          type: array
+        hosts:
+          description: 匹配的Host列表
+          items:
+            type: string
+          type: array
+        paths:
+          description: 匹配的路径
+          items:
+            type: string
+          type: array
+        headers:
+          description: 匹配的请求头
+          items:
+            type: string
+          type: array
+        https_redirect_status_code:
+          description: 协议不匹配时的重定向状态码
+          type: integer
+        regex_priority:
+          description: 正则匹配优先级
+          type: integer
+        strip_path:
+          description: 是否移除路径前缀
+          type: boolean
+        preserve_host:
+          description: 是否保留原始请求的Host头
+          type: boolean
+        request_buffering:
+          description: 是否缓冲请求体数据
+          type: boolean
+        response_buffering:
+          description: 是否缓冲响应体数据
+          type: boolean
+        snis:
+          description: 支持的SNI列表
+          items:
+            type: string
+          type: array
+        sources:
+          description: 允许的源IP列表
+          items:
+            type: string
+          type: array
+        destinations:
+          description: 目标服务地址列表
+          items:
+            type: string
+          type: array
+        tags:
+          description: 路由标签
+          items:
+            type: string
+          type: array
+        agent_protocol:
+          description: Agent/Tool通信协议
+          type: string
+        service:
+          description: 关联的服务名
+          type: string
+      required:
+      - name
+      type: object
+    Route:
+      additionalProperties: false
+      example:
+        headers:
+        - headers
+        - headers
+        request_buffering: true
+        agent_protocol: agent_protocol
+        sources:
+        - sources
+        - sources
+        methods:
+        - methods
+        - methods
+        hosts:
+        - hosts
+        - hosts
+        https_redirect_status_code: 5
+        destinations:
+        - destinations
+        - destinations
+        created_at: 0
+        index: 1
+        preserve_host: true
+        gateway_id: gateway_id
+        strip_path: true
+        response_buffering: true
+        tags:
+        - tags
+        - tags
+        snis:
+        - snis
+        - snis
+        updated_at: 6
+        paths:
+        - paths
+        - paths
+        service: service
+        name: name
+        regex_priority: 5
+        id: id
+        protocols:
+        - protocols
+        - protocols
+      properties:
+        id:
+          description: 路由唯一标识
+          type: string
+        created_at:
+          description: 记录创建时间（由注册中心设置）
+          format: int64
+          type: integer
+          x-go-type: uint64
+        updated_at:
+          description: 记录最后更新时间（由注册中心设置）
+          format: int64
+          type: integer
+          x-go-type: uint64
+        index:
+          description: 路由更新序号
+          format: int64
+          type: integer
+          x-go-type: uint64
+        name:
+          description: 路由名称
+          type: string
+        gateway_id:
+          description: 此路由关联的网关标识
+          type: string
+        protocols:
+          description: 支持的协议列表
+          items:
+            type: string
+          type: array
+        methods:
+          description: 匹配的HTTP方法列表
+          items:
+            type: string
+          type: array
+        hosts:
+          description: 匹配的Host列表
+          items:
+            type: string
+          type: array
+        paths:
+          description: 匹配的路径
+          items:
+            type: string
+          type: array
+        headers:
+          description: 匹配的请求头
+          items:
+            type: string
+          type: array
+        https_redirect_status_code:
+          description: 协议不匹配时的重定向状态码
+          type: integer
+        regex_priority:
+          description: 正则匹配优先级
+          type: integer
+        strip_path:
+          description: 是否移除路径前缀
+          type: boolean
+        preserve_host:
+          description: 是否保留原始请求的Host头
+          type: boolean
+        request_buffering:
+          description: 是否缓冲请求体数据
+          type: boolean
+        response_buffering:
+          description: 是否缓冲响应体数据
+          type: boolean
+        snis:
+          description: 支持的SNI列表
+          items:
+            type: string
+          type: array
+        sources:
+          description: 允许的源IP列表
+          items:
+            type: string
+          type: array
+        destinations:
+          description: 目标服务地址列表
+          items:
+            type: string
+          type: array
+        tags:
+          description: 路由标签
+          items:
+            type: string
+          type: array
+        agent_protocol:
+          description: Agent/Tool通信协议
+          type: string
+        service:
+          description: 关联的服务名
+          type: string
+      required:
+      - name
+      type: object
+    PatchServiceRequest:
+      additionalProperties: true
+      description: Schema for service patch requests
+      example:
+        agent_protocol: agent_protocol
+        connect_timeout: 1
+        ephemeral: true
+        tags:
+        - tags
+        - tags
+        agent_info_url: agent_info_url
+        retries: 0
+        path: path
+        protocol: protocol
+        port: 6
+        ephemeral_check:
+          renewal_unhealthy_timeout: 30s
+          renewal_delete_timeout: 60s
+          check_type: TTL
+          renewal_interval: 15s
+        persistent_check:
+          check_interval: 15s
+          check_http_method: check_http_method
+          check_type: check_type
+          check_timeout: 5s
+          check_http_url: check_http_url
+          check_unhealthy_timeout: 60s
+        agent_info: "{}"
+        write_timeout: 5
+        name: name
+        host: host
+        read_timeout: 5
+      properties:
+        ephemeral:
+          description: 服务注册类型。true：临时注册；false：持久注册
+          type: boolean
+        name:
+          description: 服务名称
+          type: string
+        retries:
+          description: 连接失败重试次数
+          type: integer
+        protocol:
+          description: 传输协议类型
+          type: string
+        host:
+          description: 后端服务域名/IP
+          type: string
+        port:
+          description: 后端服务端口
+          type: integer
+        path:
+          description: 服务路径
+          type: string
+        connect_timeout:
+          description: 连接超时时间（毫秒）
+          type: integer
+        write_timeout:
+          description: 写入超时时间（毫秒）
+          type: integer
+        read_timeout:
+          description: 读取超时时间（毫秒）
+          type: integer
+        tags:
+          description: "自定义标签（例如[namespacea,group=x]）"
+          items:
+            type: string
+          type: array
+        ephemeral_check:
+          $ref: "#/components/schemas/EphemeralCheck"
+        persistent_check:
+          $ref: "#/components/schemas/PersistentCheck"
+        agent_protocol:
+          description: Agent/Tool服务通信协议
+          type: string
+        agent_info:
+          description: 不同agent_protocol对应的特有内容
+          type: object
+        agent_info_url:
+          description: agent_info为空时，从agent_info_url获取agent_protocol内容
+          type: string
+      required:
+      - host
+      - name
+      - port
+      - protocol
+      type: object
+    Service:
+      additionalProperties: true
+      description: Service configuration schema
+      example:
+        agent_protocol: agent_protocol
+        connect_timeout: 2
+        ephemeral: true
+        created_at: 0
+        index: 1
+        tags:
+        - tags
+        - tags
+        agent_info_url: agent_info_url
+        retries: 5
+        path: path
+        protocol: protocol
+        updated_at: 6
+        port: 5
+        ephemeral_check:
+          renewal_unhealthy_timeout: 30s
+          renewal_delete_timeout: 60s
+          check_type: TTL
+          renewal_interval: 15s
+        persistent_check:
+          check_interval: 15s
+          check_http_method: check_http_method
+          check_type: check_type
+          check_timeout: 5s
+          check_http_url: check_http_url
+          check_unhealthy_timeout: 60s
+        agent_info: "{}"
+        write_timeout: 7
+        name: name
+        host: host
+        id: id
+        read_timeout: 9
+      properties:
+        ephemeral:
+          description: 服务注册类型。true：临时注册；false：持久注册
+          type: boolean
+        id:
+          description: 服务唯一标识符
+          type: string
+        created_at:
+          description: 记录创建时间（由注册中心设置）
+          format: int64
+          type: integer
+          x-go-type: uint64
+        updated_at:
+          description: 记录最后更新时间（由注册中心设置）
+          format: int64
+          type: integer
+          x-go-type: uint64
+        index:
+          description: 服务更新序号
+          format: int64
+          type: integer
+          x-go-type: uint64
+        name:
+          description: 服务名称
+          type: string
+        retries:
+          description: 连接失败重试次数
+          type: integer
+        protocol:
+          description: 传输协议类型
+          type: string
+        host:
+          description: 后端服务域名/IP
+          type: string
+        port:
+          description: 后端服务端口
+          type: integer
+        path:
+          description: 服务路径
+          type: string
+        connect_timeout:
+          description: 连接超时时间（毫秒）
+          type: integer
+        write_timeout:
+          description: 写入超时时间（毫秒）
+          type: integer
+        read_timeout:
+          description: 读取超时时间（毫秒）
+          type: integer
+        tags:
+          description: "自定义标签（例如[namespace=a,group=x]）"
+          items:
+            type: string
+          type: array
+        ephemeral_check:
+          $ref: "#/components/schemas/EphemeralCheck"
+        persistent_check:
+          $ref: "#/components/schemas/PersistentCheck"
+        agent_protocol:
+          description: Agent/Tool服务通信协议
+          type: string
+        agent_info:
+          description: 不同agent_protocol对应的特有内容
+          type: object
+        agent_info_url:
+          description: agent_info为空时，从agent_info_url获取agent_protocol内容
+          type: string
+      required:
+      - host
+      - name
+      - port
+      - protocol
+      type: object

@@ -531,4 +531,4 @@
 - MCP规范：https://modelcontextprotocol.io/specification
 
 # 附录 A
-- 协议对象schema文件：https://github.com/ZTE-AICloud/Co-TAP/docs/specification/UAP/uap-schema.json
+- 协议对象schema文件：https://github.com/ZTE-AICloud/Co-TAP/blob/master/docs/specification/UAP/uap-schema.json

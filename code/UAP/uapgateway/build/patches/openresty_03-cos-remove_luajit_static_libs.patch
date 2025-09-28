@@ -1,0 +1,19 @@
+Subject: [PATCH] iDN-813236: remove luajit *.a
+---
+Index: configure
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/configure b/configure
+--- a/configure	(revision e10fc00102981d09e31bb5357222652ef96b76e8)
++++ b/configure	(revision 25e168e77670e455205054ce791c2d356d4d407b)
+@@ -852,7 +852,7 @@
+             File::Spec->rel2abs(File::Spec->catfile($root_dir, "build",
+                                                     $luajit_src),
+                                 $root_dir);
+-
++        push @make_install_cmds, "rm -rf $root_dir/build/$luajit_src/src/*.a $luajit_root$luajit_prefix/lib/*.a";
+         if ($platform eq 'msys') {
+             push @make_install_cmds, "cd $abs_luajit_src && "
+                 . "cp -rv $luajit_root/* \$(DESTDIR)$prefix/";

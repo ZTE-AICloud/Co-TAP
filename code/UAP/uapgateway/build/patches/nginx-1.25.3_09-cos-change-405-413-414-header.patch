@@ -1,0 +1,30 @@
+Subject: [PATCH] nginx-1.21.4_09-change-405-413-414-header
+---
+Index: bundle/nginx-1.25.3/src/http/ngx_http_header_filter_module.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/bundle/nginx-1.25.3/src/http/ngx_http_header_filter_module.c b/bundle/nginx-1.25.3/src/http/ngx_http_header_filter_module.c
+--- a/bundle/nginx-1.25.3/src/http/ngx_http_header_filter_module.c	(revision 72fd7cde95d6762e5d15540734fcbfe8128b5bbc)
++++ b/bundle/nginx-1.25.3/src/http/ngx_http_header_filter_module.c	(revision 4162f03417a14028f281447075d0a0c988ade4a9)
+@@ -80,7 +80,7 @@
+     ngx_string("402 Payment Required"),
+     ngx_string("403 Forbidden"),
+     ngx_string("404 Not Found"),
+-    ngx_string("405 Not Allowed"),
++    ngx_string("405 Method Not Allowed"),
+     ngx_string("406 Not Acceptable"),
+     ngx_null_string,  /* "407 Proxy Authentication Required" */
+     ngx_string("408 Request Time-out"),
+@@ -88,8 +88,8 @@
+     ngx_string("410 Gone"),
+     ngx_string("411 Length Required"),
+     ngx_string("412 Precondition Failed"),
+-    ngx_string("413 Request Entity Too Large"),
+-    ngx_string("414 Request-URI Too Large"),
++    ngx_string("413 Payload Too Large"),
++    ngx_string("414 URI Too Long"),
+     ngx_string("415 Unsupported Media Type"),
+     ngx_string("416 Requested Range Not Satisfiable"),
+     ngx_null_string,  /* "417 Expectation Failed" */

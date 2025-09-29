@@ -1,0 +1,38 @@
+<!-- Started by AICoder, pid:g27dd471f1k366f148a50aeaa08df72956e0fef0 -->
+<plx-frame-native [type]="'task'"
+                  [title]="title"
+                  [logo]="logo"
+                  [headerActions]="headerActions"
+                  [activeMode]="activeMode"
+                  [chatTemplate]="chatTemplate"
+                  [taskTemplate]="taskTemplate"
+                  [workflowTemplate]="workflowTemplate"
+                  [tabItems]="showTab ? tabItems : undefined"
+                  [tabActiveId]="tabActiveId"
+                  (tabChange)="onTabChange($event)">
+</plx-frame-native>
+
+<ng-template #taskTemplate>
+  <img *ngIf="tabActiveId === 'tabId1'"
+       src="./assets/img/fault-index.png"
+       width="100%"
+       height="100%">
+  <ng-container *ngIf="tabActiveId === 'tabId2'">
+    <plx-task *ngFor="let task of tasks"
+              [task]="task"></plx-task>
+  </ng-container>
+</ng-template>
+<!-- Ended by AICoder, pid:g27dd471f1k366f148a50aeaa08df72956e0fef0 -->
+
+<ng-template #chatTemplate>
+  <div class="task-chat">
+    <plx-chat [dialogue]="dialogue"
+              [senderConfig]="senderConfig"
+              (onSend)="onSend($event)"
+              (bubbleContentAction)="bubbleContentAction($event)"></plx-chat>
+  </div>
+</ng-template>
+<ng-template #workflowTemplate>
+  <plx-workflow [items]="state?.workflowItems">
+  </plx-workflow>
+</ng-template>

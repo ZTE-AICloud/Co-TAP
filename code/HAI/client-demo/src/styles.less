@@ -1,0 +1,66 @@
+/* You can add global styles to this file, and also import other style files */
+@import '../node_modules/paletx/assets/css/bootstrap.css';
+@import '../node_modules/paletx/assets/css/style.css';
+
+.plx-dot-red {
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    position: absolute;
+    right: -4px;
+    top: 4px;
+    transform: translateX(4px) translateY(-4px);
+    background-color: #f54c4c;
+  }
+}
+
+.plx-ai-highlight-area {
+  background-color: rgba(32,44,70,0.50);
+  border-radius: 4px;
+}
+/* Started by AICoder, pid:tf9c6772a7c2e4e149650bafd02f3d4dd8685ce5 */
+// 彩色渐变
+.plx-color-gradient-border {
+  border-color: transparent;
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  background-image:linear-gradient(to right,#0c1d40, #0c1d40),
+    linear-gradient(45deg,
+      #7977ff 0%,
+      #7977ff 30%,
+      #43c7ff 40%,
+      #1bffe4 45%,
+      #ff4df7 50%,
+      #ffca3c 55%,
+      #ffca3c 100%
+    );
+}
+.plx-color-gradient-bg {
+  background-image: linear-gradient(270deg, 
+    rgba(238,238,238,0.1) 0%, 
+    rgba(255,199,62,0.1) 0%, 
+    rgba(255,179,95,0.1) 6%, 
+    rgba(235,83,247,0.1) 29%, 
+    rgba(118,122,255,0.1) 56%, 
+    rgba(94,157,255,0.1) 72%, 
+    rgba(60,246,202,0.1) 100%
+  );
+  &:hover {
+    background-image: linear-gradient(270deg,
+      rgba(238,238,238,0.25) 0%,
+      rgba(255,199,62,0.25) 0%,
+      rgba(255,179,95,0.25) 6%,
+      rgba(235,83,247,0.25) 29%,
+      rgba(118,122,255,0.25) 56%,
+      rgba(94,157,255,0.25) 72%,
+      rgba(60,246,202,0.25) 100%
+    );
+  }
+}
+
+/* Ended by AICoder, pid:tf9c6772a7c2e4e149650bafd02f3d4dd8685ce5 */

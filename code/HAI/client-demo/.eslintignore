@@ -1,0 +1,8 @@
+./node_modules
+./dist/
+test
+./build/
+*.spec.ts
+./compiled
+./package-lock.json
+./.portal-devkit.rc.js

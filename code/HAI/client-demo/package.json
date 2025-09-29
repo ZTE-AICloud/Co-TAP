@@ -1,0 +1,49 @@
+{
+  "name": "hai-client-demo",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --proxy-config proxy.conf.js --host 0.0.0.0 --port 4201 --disable-host-check",
+    "build": "ng build --configuration production",
+    "eslint": "eslint -c .eslintrc.json src --ext .ts,.js --ignore-path .eslintignore . -f html -o ./eslint.html",
+    "test": "jest --verbose",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "18.2.13",
+    "@angular/common": "18.2.13",
+    "@angular/compiler": "18.2.13",
+    "@angular/core": "18.2.13",
+    "@angular/forms": "18.2.13",
+    "@angular/platform-browser": "18.2.13",
+    "@angular/platform-browser-dynamic": "18.2.13",
+    "@angular/router": "18.2.13",
+    "@ngx-translate/core": "16.0.3",
+    "@ngx-translate/http-loader": "16.0.0",
+    "hai-client": "0.0.5",
+    "hai-client-demo": "file:",
+    "paletx": "25.400300.23779260",
+    "rxjs": "7.8.1",
+    "tslib": "2.8.1",
+    "zone.js": "0.14.10"
+  },
+  "devDependencies": {
+    "@angular-builders/custom-webpack": "18.0.0",
+    "@angular-devkit/build-angular": "18.2.12",
+    "@angular/cli": "18.2.12",
+    "@angular/compiler-cli": "18.2.13",
+    "@types/jest": "29.5.14",
+    "@types/node": "18.19.67",
+    "@typescript-eslint/eslint-plugin": "8.18.0",
+    "@typescript-eslint/parser": "8.18.0",
+    "eslint": "9.16.0",
+    "html-webpack-plugin": "5.5.0",
+    "husky": "4.3.8",
+    "jest": "29.7.0",
+    "jest-preset-angular": "14.4.2",
+    "lint-staged": "9.5.0",
+    "typescript": "5.5.4"
+  }
+}

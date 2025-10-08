@@ -1,0 +1,79 @@
+[
+  {
+    "session_id": "shopping_001",
+    "user_id": "user_12345",
+    "workflow_name": "智能手机购买流程",
+    "domain": "电商购物",
+    "start_time": "2025-01-15T14:30:12Z",
+    "end_time": "2025-01-15T14:48:45Z",
+    "result_status": "success",
+    "steps": [
+      {
+        "step_name": "浏览商品",
+        "action": "browse_products",
+        "timestamp": "2025-01-15T14:30:12Z",
+        "details": {
+          "category": "electronics",
+          "search_query": "智能手机",
+          "products_viewed": ["phone_001", "phone_002", "phone_003"]
+        },
+        "duration_seconds": 308
+      },
+      {
+        "step_name": "查看详情",
+        "action": "view_product_detail",
+        "timestamp": "2025-01-15T14:35:20Z",
+        "details": {
+          "product_id": "phone_001",
+          "product_name": "iPhone 15 Pro",
+          "price": 7999.00,
+          "time_spent_seconds": 180
+        },
+        "duration_seconds": 295
+      },
+      {
+        "step_name": "添加购物车",
+        "action": "add_to_cart",
+        "timestamp": "2025-01-15T14:40:15Z",
+        "details": {
+          "product_id": "phone_001",
+          "quantity": 1,
+          "variant": "256GB_深空黑",
+          "cart_total": 7999.00
+        },
+        "duration_seconds": 315
+      },
+      {
+        "step_name": "进入结算",
+        "action": "proceed_to_checkout",
+        "timestamp": "2025-01-15T14:45:30Z",
+        "details": {
+          "cart_items": 1,
+          "total_amount": 7999.00,
+          "shipping_method": "standard",
+          "address_confirmed": true
+        },
+        "duration_seconds": 195
+      },
+      {
+        "step_name": "完成支付",
+        "action": "complete_payment",
+        "timestamp": "2025-01-15T14:48:45Z",
+        "details": {
+          "order_id": "ORD-001",
+          "payment_method": "alipay",
+          "amount_paid": 7999.00,
+          "transaction_success": true
+        },
+        "duration_seconds": 0
+      }
+    ],
+    "metadata": {
+      "device": "mobile",
+      "location": "Beijing",
+      "total_duration_minutes": 18.5,
+      "conversion_rate": 1.0,
+      "customer_satisfaction": "high"
+    }
+  }
+] 

@@ -1,0 +1,23 @@
+# MEK项目配置文件示例
+# 复制此文件为 config.yaml 并填入实际的API配置
+
+# LLM Chat Client配置
+llm:
+  provider: "llm-provider"
+  model_name: "model-name"
+  base_url: "url"
+  api_key: "api-key"
+  
+# Embedding Client配置  
+embedding:
+  provider: "embedder-provider"
+  model_name: "embedding model"
+  base_url: "url"
+  api_key: "api-key"
+  embedding_dim: 1024
+
+# MEK系统配置
+mek:
+  memory_storage_path: "data/memory"
+  default_retrieval_limit: 20
+  default_importance_weight: 1.0 

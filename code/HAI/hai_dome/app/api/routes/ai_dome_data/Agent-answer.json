@@ -1,0 +1,112 @@
+[
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_START",
+        "from": "USER",
+        "to": "planerAgent",
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_CONTENT",
+        "delta": {
+            "task": {
+                "id": "plan-task",
+                "name": "动态规划"
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_END",
+        "timestamp": 1725811200000
+    },
+
+
+
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_START",
+        "from": "planerAgent",
+        "to": "actorAgent",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_CONTENT",
+        "delta": {
+            "task": {
+                "id": "故障诊断1",
+                "name": "调用工具：故障诊断"
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_END",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_START",
+        "from": "planerAgent",
+        "to": "actorAgent",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_CONTENT",
+        "delta": {
+            "task": {
+                "id": "通知人类专家处理1",
+                "name": "调用工具：通知人类专家处理"
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_END",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_START",
+        "from": "planerAgent",
+        "to": "actorAgent",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_CONTENT",
+        "delta": {
+            "task": {
+                "id": "故障评估1",
+                "name": "调用工具：故障评估"
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_END",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_START",
+        "from": "actorAgent",
+        "to": "planerAgent",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_START",
+        "from": "planerAgent",
+        "to": "actorAgent",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_CONTENT",
+        "delta": {
+            "task": {
+                "id": "总结1",
+                "name": "调用工具：总结"
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_END",
+        "timestamp": 1725811200000
+    }
+]

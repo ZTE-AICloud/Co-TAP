@@ -1,0 +1,1287 @@
+[
+    {
+        "type": "RUN_STARTED",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_START",
+        "from": "USER",
+        "to": "planerAgent",
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_CONTENT",
+        "delta": {
+            "task": {
+                "id": "plan-task",
+                "name": "动态规划"
+            }
+        },
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_END",
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "add",
+            "path": "/workflowItems/0/status",
+            "value": "running",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "replace",
+            "path": "/workflowItems/0/status",
+            "value": "done",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_START",
+        "from": "planerAgent",
+        "to": "actorAgent",
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_CONTENT",
+        "delta": {
+            "task": {
+                "id": "故障诊断1",
+                "name": "调用工具：故障诊断"
+            }
+        },
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_END",
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "add",
+            "path": "/workflowItems/1/status",
+            "value": "pending",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_START",
+        "from": "planerAgent",
+        "to": "actorAgent",
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_CONTENT",
+        "delta": {
+            "task": {
+                "id": "通知人类专家处理1",
+                "name": "调用工具：通知人类专家处理"
+            }
+        },
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_END",
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "add",
+            "path": "/workflowItems/2/status",
+            "value": "pending",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_START",
+        "from": "planerAgent",
+        "to": "actorAgent",
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_CONTENT",
+        "delta": {
+            "task": {
+                "id": "故障评估1",
+                "name": "调用工具：故障评估"
+            }
+        },
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_END",
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "add",
+            "path": "/workflowItems/3/status",
+            "value": "pending",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_START",
+        "from": "planerAgent",
+        "to": "actorAgent",
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_CONTENT",
+        "delta": {
+            "task": {
+                "id": "总结1",
+                "name": "调用工具：总结"
+            }
+        },
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "AGENT_COLLABORATIVE_MESSAGE_END",
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "add",
+            "path": "/workflowItems/4/status",
+            "value": "pending",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STEP_STARTED",
+        "stepName": "智能处理"
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "replace",
+            "path": "/workflowItems/1/status",
+            "value": "running",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_START",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "fold",
+                "data": {
+                    "title": "故障诊断",
+                    "fold": false,
+                    "position": "start"
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "已收到用户反馈的告警故障处理诉求",
+                    "elapsed": 10,
+                    "thinking": true,
+                    "collapse": true
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "，搜索到相关的专业知识和网络信息，",
+                    "elapsed": 10,
+                    "thinking": true,
+                    "collapse": true
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "将根据这些信息初步拟定处理流程：",
+                    "elapsed": 10,
+                    "thinking": true,
+                    "collapse": true
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "先精准‘故障分析’，",
+                    "elapsed": 10,
+                    "thinking": true,
+                    "collapse": true
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "再据此‘生成方案’，",
+                    "elapsed": 10,
+                    "thinking": true,
+                    "collapse": true
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "之后进行‘故障评估’，确认故障是否解决。",
+                    "elapsed": 10,
+                    "thinking": true,
+                    "collapse": true
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "最后，会全面总结这次故障处理过程，为后续故障处理提供经验。",
+                    "elapsed": 10,
+                    "thinking": true,
+                    "collapse": true
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "为后续故障处理提供经验。",
+                    "elapsed": 20,
+                    "thinking": false,
+                    "collapse": true
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "对出现的DU小区退服进行故障诊断，调用相关工具以获取详细信息和处理建议。"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "toolCallShow",
+                "id": "comId | 用于追加到原来的工具调用列表中",
+                "data": {
+                    "title": "调用工具 | 故障诊断",
+                    "icon": "plx-setting",
+                    "tools": [
+                        {
+                            "id": "tool-1",
+                            "name": "查询告警",
+                            "description": "通过查询告警，返回告警内容",
+                            "progress": "正在查询告警"
+                        }
+                    ]
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "toolCallShow",
+                "id": "comId | 用于追加到原来的工具调用列表中",
+                "data": {
+                    "title": "调用工具 | 故障诊断",
+                    "icon": "plx-setting",
+                    "tools": [
+                        {
+                            "id": "tool-1",
+                            "name": "查询告警",
+                            "description": "通过查询告警，返回告警内容",
+                            "progress": "查询告警结束",
+                            "data": {
+                                "title": "查询告警",
+                                "description": "通过查询告警，返回告警内容",
+                                "data": [
+                                    {
+                                        "output": {
+                                            "type": "text",
+                                            "content": "根据用户选择的告警，查询当前网元对应时段告警。查询条件：本告警发生时间前后15分钟内发生的告警，即告警发生时间在2025-07-11 20:28:14到2025-07-11- 20:58:14的告警。\n已查询道德告警如下："
+                                        }
+                                    },
+                                    {
+                                        "output": {
+                                            "type": "table",
+                                            "data": {
+                                                "columns": [
+                                                    "告警级别",
+                                                    "位置",
+                                                    "告警码名称",
+                                                    "发生时间",
+                                                    "清除时间"
+                                                ],
+                                                "rows": [
+                                                    [
+                                                        "严重",
+                                                        "R9005_2",
+                                                        "RRU链路断",
+                                                        "2025-07-11 20:43:14",
+                                                        "--"
+                                                    ],
+                                                    [
+                                                        "主要",
+                                                        "TDD_44",
+                                                        "DU小区退服",
+                                                        "2025-07-11 20:43:14",
+                                                        "--"
+                                                    ],
+                                                    [
+                                                        "次要",
+                                                        "Equipment=1",
+                                                        "光模块不可用",
+                                                        "2025-07-11 20:42:14",
+                                                        "--"
+                                                    ],
+                                                    [
+                                                        "警告",
+                                                        "Equipment=2",
+                                                        "光模块接收光功率异常",
+                                                        "2025-07-11 20:36:06",
+                                                        "--"
+                                                    ],
+                                                    [
+                                                        "严重",
+                                                        "Equipment=3",
+                                                        "单板通讯链路断",
+                                                        "2025-07-11 20:32:17",
+                                                        "--"
+                                                    ],
+                                                    [
+                                                        "严重",
+                                                        "Equipment=4",
+                                                        "系统时钟不可用",
+                                                        "2025-07-11 20:28:28",
+                                                        "--"
+                                                    ]
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_END",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "TOOL_CALL_START",
+        "toolCallId": "tool-open-1",
+        "toolCallName": "openToolSidePage",
+        "parentMessageId": "msg-2"
+    },
+    {
+        "type": "TOOL_CALL_ARGS",
+        "toolCallId": "tool-open-1",
+        "delta": {
+            "id": "tool-1"
+        }
+    },
+    {
+        "type": "TOOL_CALL_END",
+        "toolCallId": "tool-open-1"
+    },
+
+    {
+        "type": "BUSINESS_DATA_START",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "toolCallShow",
+                "id": "comId | 用于追加到原来的工具调用列表中",
+                "data": {
+                    "title": "调用工具 | 故障诊断",
+                    "icon": "plx-setting",
+                    "tools": [
+                        {
+                            "id": "tool-2",
+                            "name": "查询指标",
+                            "description": "通过查询系统指标，呈现指标内容给用户",
+                            "progress": "正在查询指标"
+                        }
+                    ]
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "toolCallShow",
+                "id": "comId | 用于追加到原来的工具调用列表中",
+                "data": {
+                    "title": "调用工具 | 故障诊断",
+                    "icon": "plx-setting",
+                    "tools": [
+                        {
+                            "id": "tool-2",
+                            "name": "查询指标",
+                            "description": "通过查询系统指标，呈现指标内容给用户",
+                            "progress": "完成指标查询",
+                            "data": {
+                                "title": "查询指标",
+                                "description": "通过查询系统指标，呈现指标内容给用户",
+                                "data": [
+                                    {
+                                        "output": {
+                                            "type": "text",
+                                            "content": "根据用户选择的指标，查询当前网元对应时段指标。查询条件：本指标发生时间前后15分钟内发生的指标，即指标发生时间在2025-07-11 20:28:14到2025-07-11- 20:58:14的指标。\n已查询道德指标如下："
+                                        }
+                                    },
+                                    {
+                                        "output": {
+                                            "type": "echarts",
+                                            "data": {
+                                                "option": {
+                                                    "grid": {
+                                                        "left": "16",
+                                                        "right": "16",
+                                                        "bottom": "16",
+                                                        "containLabel": true
+                                                    },
+                                                    "tooltip": {
+                                                        "trigger": "axis"
+                                                    },
+                                                    "xAxis": {
+                                                        "type": "category",
+                                                        "axisLabel": {
+                                                            "interval": 0,
+                                                            "rotate": -30,
+                                                            "margin": 10
+                                                        },
+                                                        "data": [
+                                                            "13:00",
+                                                            "13:30",
+                                                            "14:00",
+                                                            "14:30",
+                                                            "15:00",
+                                                            "15:30",
+                                                            "16:00",
+                                                            "16:30",
+                                                            "17:00",
+                                                            "17:30",
+                                                            "18:00",
+                                                            "18:30",
+                                                            "19:00",
+                                                            "19:30"
+                                                        ]
+                                                    },
+                                                    "yAxis": {
+                                                        "type": "value"
+                                                    },
+                                                    "series": [
+                                                        {
+                                                            "name": "性能指标",
+                                                            "type": "line",
+                                                            "data": [
+                                                                33,
+                                                                41,
+                                                                37,
+                                                                40,
+                                                                36,
+                                                                39,
+                                                                35,
+                                                                26,
+                                                                28,
+                                                                24,
+                                                                29,
+                                                                27,
+                                                                26,
+                                                                28
+                                                            ],
+                                                            "lineStyle": {
+                                                                "width": 3
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_END",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "replace",
+            "path": "/workflowItems/1/status",
+            "value": "done",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "TOOL_CALL_START",
+        "toolCallId": "tool-open-2",
+        "toolCallName": "openToolSidePage",
+        "parentMessageId": "msg-2"
+    },
+    {
+        "type": "TOOL_CALL_ARGS",
+        "toolCallId": "tool-open-2",
+        "delta": {
+            "id": "tool-2"
+        }
+    },
+    {
+        "type": "TOOL_CALL_END",
+        "toolCallId": "tool-open-2"
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "replace",
+            "path": "/workflowItems/2/status",
+            "value": "running",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_START",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "icon",
+                "data": {
+                    "icon": "plx-ico-report-16",
+                    "color": ""
+                }
+            },
+            "style": {
+                "background": true
+            },
+            "blockId": "block-1",
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": " 结论"
+            },
+            "blockId": "block-1",
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "\n   请插入或更换光模块。光口位置：VBP_1XXX"
+            },
+            "blockId": "block-1",
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "完成后仍可进行操作\n"
+            },
+            "blockId": "block-2",
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "button",
+                "data": {
+                    "name": "开始处理"
+                }
+            },
+            "blockId": "block-2",
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "fold",
+                "data": {
+                    "title": "故障诊断",
+                    "fold": false,
+                    "position": "end"
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_END",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "replace",
+            "path": "/workflowItems/2/status",
+            "value": "done",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "replace",
+            "path": "/workflowItems/3/status",
+            "value": "running",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_START",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "\n\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "fold",
+                "data": {
+                    "title": "故障评估",
+                    "fold": false,
+                    "position": "start"
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "思考内容思考内容思考内容",
+                    "elapsed": 10,
+                    "thinking": true,
+                    "collapse": true
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "思考内容思考内容思考内容。",
+                    "elapsed": 10,
+                    "thinking": true,
+                    "collapse": true
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "接下来使用正文回答用户的问题。",
+                    "elapsed": 20,
+                    "thinking": false,
+                    "collapse": true
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "toolCallShow",
+                "id": "comId2 | 用于追加到原来的工具调用列表中",
+                "data": {
+                    "title": "调用工具 | 故障评估工具",
+                    "icon": "plx-setting",
+                    "tools": [
+                        {
+                            "id": "tool-3",
+                            "name": "告警检查",
+                            "description": "通过检查告警是否清除，输出清除结论",
+                            "progress": "正在检查 当前告警是否清除"
+                        },
+                        {
+                            "id": "tool-4",
+                            "name": "DCM数据采集",
+                            "description": "DCM数据采集",
+                            "progress": "正在启动 DCM数据采集"
+                        }
+                    ]
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "故障评估结束，但仍可进行数据采集\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "button",
+                "data": {
+                    "name": "数据采集"
+                }
+            },
+            "blockId": "block-3",
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "fold",
+                "data": {
+                    "title": "故障评估",
+                    "fold": false,
+                    "position": "end"
+                }
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_END",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "replace",
+            "path": "/workflowItems/3/status",
+            "value": "done",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STEP_FINISHED",
+        "stepName": "智能处理"
+    },
+    {
+        "type": "STEP_STARTED",
+        "stepName": "总结和建议"
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "replace",
+            "path": "/workflowItems/4/status",
+            "value": "running",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_START",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "一、首先根据告警信息进行故障诊断：\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "故障诊断的根因结果为： \n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "(1) 单板输入系统时钟异常。\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "二、分析上述根因生成解决方案：\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "(1) 请在RANCLI中使用eac powerOffResetBoard命令复位单板后继续观察能否恢复。\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "单板位置:VBP_1_4:(VBPd2p, SN:734564500081)\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "三、解决方案执行过程概要：\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "(1) 对单板Equipment=1,ReplaceableUnit=VBP_1_4执行下电复位成功，请15分钟后再检查告警是否恢复。\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "四、本次故障的最终的处理结果：\n"
+            },
+            "layout": {
+                "x": 0
+            }
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_END",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": [{
+            "op": "replace",
+            "path": "/workflowItems/4/status",
+            "value": "done",
+            "from": ""
+        }],
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STEP_FINISHED",
+        "stepName": "总结和建议"
+    },
+    {
+        "type": "RUN_FINISHED",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    }
+]

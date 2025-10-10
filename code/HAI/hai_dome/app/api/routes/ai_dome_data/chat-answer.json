@@ -1,0 +1,85 @@
+[
+    {
+        "type": "RUN_STARTED",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_START",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "好的，我了解到用户xxx",
+                    "elapsed": 10,
+                    "thinking": true,
+                    "collapse": true
+                }
+            },
+            "layout": {}
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "thinking",
+                "data": {
+                    "content": "思考完毕",
+                    "elapsed": 20,
+                    "thinking": false,
+                    "collapse": true
+                }
+            },
+            "layout": {}
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "text",
+                "content": "根据您的输入，将对如下对象进行\"光纤故障诊断\"：\n已选网元：100011\n已选对象：Equipment1,RepiaceableUni=VBP_1_3,RiPort=0\n若符合需求，请点击\"开始执行\""
+            },
+            "layout": {}
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_CONTENT",
+        "messageId": "msg-2",
+        "delta": {
+            "output": {
+                "type": "button",
+                "data": {
+                    "name": "开始执行"
+                }
+            },
+            "layout": {}
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "BUSINESS_DATA_END",
+        "messageId": "msg-2",
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "RUN_FINISHED",
+        "messageId": "msg-2",
+        "role": "assistant",
+        "timestamp": 1725811200000
+    }
+]

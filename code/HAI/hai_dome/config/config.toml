@@ -1,0 +1,19 @@
+[llm.production]
+api_type= 'Openai'
+model = "anthropic/claude-sonnet-4"
+base_url = "https://openrouter.ai/api/v1/"
+api_key = ""
+max_tokens = 4096
+temperature = 0.0
+http_proxy = ""
+is_internal = false
+
+# Vision模型 - 生产模式
+[llm.vision.production]
+api_type= 'Openai'
+model = "google/gemini-2.5-flash"
+base_url = "https://openrouter.ai/api/v1/"
+api_key = ""
+http_proxy = ""
+is_internal = false
+

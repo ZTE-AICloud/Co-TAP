@@ -1,0 +1,65 @@
+[
+    {
+        "type": "STATE_DELTA",
+        "delta": {
+            "op": "add",
+            "path": "/task/plan-task",
+            "value": "running",
+            "from": ""
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": {
+            "op": "replace",
+            "path": "/task/plan-task",
+            "value": "done",
+            "from": ""
+        },
+        "timestamp": 1725811200000
+    },
+    {
+        "type": "STATE_DELTA",
+        "delta": {
+            "op": "add",
+            "path": "/task/故障诊断1",
+            "value": "pending",
+            "from": ""
+        },
+        "timestamp": 1725811200000
+    },
+
+    {
+        "type": "STATE_DELTA",
+        "delta": {
+            "op": "add",
+            "path": "/task/通知人类专家处理1",
+            "value": "pending",
+            "from": ""
+        },
+        "timestamp": 1725811200000
+    },
+
+    {
+        "type": "STATE_DELTA",
+        "delta": {
+            "op": "add",
+            "path": "/task/故障评估1",
+            "value": "pending",
+            "from": ""
+        },
+        "timestamp": 1725811200000
+    },
+
+    {
+        "type": "STATE_DELTA",
+        "delta": {
+            "op": "add",
+            "path": "/task/总结1",
+            "value": "pending",
+            "from": ""
+        },
+        "timestamp": 1725811200000
+    }
+]

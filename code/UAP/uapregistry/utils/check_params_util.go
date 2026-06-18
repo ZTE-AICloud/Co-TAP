@@ -15,6 +15,7 @@ import (
 	"uapregistry/logger"
 	t "uapregistry/types"
 
+	"github.com/a2aproject/a2a-go/a2a"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -89,7 +90,7 @@ func getAgentInfo(agentProtocol, url string) (*t.AgentInfo, error) {
 
 	logger.GetLogger().Debugf("get agent info from %s: %s", url, string(resp))
 
-	var ac map[string]interface{}
+	var ac interface{}
 	err = json.Unmarshal(resp, &ac)
 	if err != nil {
 		return nil, err
@@ -97,17 +98,17 @@ func getAgentInfo(agentProtocol, url string) (*t.AgentInfo, error) {
 
 	switch agentProtocol {
 	case "a2a":
-		return &t.AgentInfo{A2AAgentCard: ac}, nil
+		return &t.AgentInfo{A2AAgentCard: ac.(*a2a.AgentCard)}, nil
 	case "acp":
-		return &t.AgentInfo{AcpAgentManifest: ac}, nil
+		return &t.AgentInfo{AcpAgentManifest: ac.(map[string]interface{})}, nil
 	case "mcp":
-		return &t.AgentInfo{McpServer: ac}, nil
+		return &t.AgentInfo{McpServer: ac.(map[string]interface{})}, nil
 	}
 
 	return nil, nil
 }
 
-func checkA2AAgentCard(ac map[string]interface{}) error {
+func checkA2AAgentCard(ac *a2a.AgentCard) error {
 	if ac == nil {
 		return errors.New("a2a_agent_card is nil")
 	}

@@ -4,22 +4,26 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"uapregistry/logger"
+	chroma "uapregistry/storage/chromaagent"
 	agent "uapregistry/storage/consulagent"
 	"uapregistry/storage/consulagent/cache"
+	"uapregistry/types"
 	t "uapregistry/types"
 	"uapregistry/utils"
 )
 
 type ServiceHandler struct {
-	agent *agent.Agent
-	log   logger.Logger
+	chromaAgent *chroma.ChromaAgentManager
+	agent       *agent.Agent
+	log         logger.Logger
 }
 
-func NewServiceHandler(agt *agent.Agent) *ServiceHandler {
-	return &ServiceHandler{agent: agt, log: logger.GetLogger()}
+func NewServiceHandler(ca *chroma.ChromaAgentManager, agt *agent.Agent) *ServiceHandler {
+	return &ServiceHandler{chromaAgent: ca, agent: agt, log: logger.GetLogger()}
 }
 
 func (svcHandler *ServiceHandler) PostService(svc *t.Service, overWrite bool) (*t.Service, int, error) {
@@ -44,6 +48,22 @@ func (svcHandler *ServiceHandler) PostService(svc *t.Service, overWrite bool) (*
 	}
 
 	return svc, http.StatusCreated, nil
+}
+
+func (svcHandler *ServiceHandler) SemanticSearch(ssq *types.SemanticSearchRequest) ([]*t.Service, error) {
+	logger.GetLogger().Info("query agent id by agent description")
+	svcIDs, err := svcHandler.chromaAgent.QueryTopNAgents(ssq)
+	if err != nil {
+		svcHandler.log.Errorf("(agentDescription:%s)Failed to semantic search: %v", ssq.Query, err)
+		return nil, err
+	}
+
+	var services []*types.Service
+	for _, svcID := range svcIDs{
+		services = append(services, cache.GetServicesCache().GetServiceByID(svcID))
+	}
+	
+	return services, nil
 }
 
 func isServiceIDExist(svcs []*t.Service, id string) bool {
@@ -98,8 +118,12 @@ func (svcHandler *ServiceHandler) DeleteServiceByID(id string) error {
 		svcHandler.log.Warnf("service(id:%s) not found", id)
 		return nil
 	}
-
-	return svcHandler.agent.DeregisterService(svcInCache.ID)
+	err := svcHandler.agent.DeregisterService(svcInCache.ID)
+	if err != nil {
+		svcHandler.log.Errorf("service(id:%s) delete in consul failed", id)
+		return err
+	}
+	return svcHandler.chromaAgent.DeleteAgent(svcInCache.ID)
 }
 
 // get ServiceNodes
@@ -109,7 +133,66 @@ func (svcHandler *ServiceHandler) GetServicesByName(serviceName string) ([]*t.Se
 
 // registerServiceIfCreate
 func (svcHandler *ServiceHandler) registerService(svc *t.Service) error {
-	return svcHandler.agent.RegisterService(svc)
+	err := svcHandler.agent.RegisterService(svc)
+	if err != nil {
+		return err
+	}
+
+	description := buildDescription(svc)
+	if description != "" {
+		return svcHandler.chromaAgent.RegisterAgent(svc.ID, description, svc.AgentInfo.A2AAgentCard)
+	}
+	return nil
+}
+
+func buildDescription(svc *t.Service) string {
+	var buf strings.Builder
+	agentCard := svc.AgentInfo.A2AAgentCard
+
+	// 1. 遍历所有技能，按字段带前缀拼接
+	for _, skill := range agentCard.Skills {
+		// 技能名称：非空才写入
+		if skill.Name != "" {
+			buf.WriteString("技能名称：")
+			buf.WriteString(skill.Name)
+			buf.WriteByte('\n')
+		}
+		// 技能描述：非空才写入
+		if skill.Description != "" {
+			buf.WriteString("技能描述：")
+			buf.WriteString(skill.Description)
+			buf.WriteByte('\n')
+		}
+		// 技能标签：数组非空才写入，用逗号拼接
+		if len(skill.Tags) > 0 {
+			buf.WriteString("技能标签：")
+			buf.WriteString(strings.Join(skill.Tags, ", "))
+			buf.WriteByte('\n')
+		}
+		// 技能示例：数组非空才写入，用逗号拼接
+		if len(skill.Examples) > 0 {
+			buf.WriteString("技能示例：")
+			buf.WriteString(strings.Join(skill.Examples, ", "))
+			buf.WriteByte('\n')
+		}
+		// 不同技能之间空一行，做语义隔离
+		buf.WriteByte('\n')
+	}
+
+	// 2. Agent 自身字段拼接
+	if agentCard.Name != "" {
+		buf.WriteString("Agent名称：")
+		buf.WriteString(agentCard.Name)
+		buf.WriteByte('\n')
+	}
+	if agentCard.Description != "" {
+		buf.WriteString("Agent描述：")
+		buf.WriteString(agentCard.Description)
+		buf.WriteByte('\n')
+	}
+
+	// 去掉末尾多余的换行，得到最终文本
+	return strings.TrimRight(buf.String(), "\n")
 }
 
 func (svcHandler *ServiceHandler) UpdateServiceStatus(id, status string) error {

@@ -99,6 +99,51 @@ func (s *HTTPServer) GetAllServiceHandler(w http.ResponseWriter, r *http.Request
 	Response200WithCustomHeader(w, j, map[string]string{"X-Uapregistry-Index": strconv.Itoa(int(lastIndex))})
 }
 
+// POST - HTTP /services/semantic/search
+func (s *HTTPServer) SemanticSearchHandler(w http.ResponseWriter, r *http.Request) {
+	//get input params
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		logger.GetLogger().Errorf("Failed to ReadAll http body for semantic search:%v", err)
+		Response500(w, "Failed to ReadAll the http body for semantic search")
+		return
+	}
+
+	ssq := &types.SemanticSearchRequest{}
+	if err = json.Unmarshal(body, ssq); err != nil {
+		logger.GetLogger().Errorf("Semantic search failed, Failed to Unmarshal body for PostService: %v body:%s", err, string(body))
+		Response400(w, "Failed to Unmarshal body for PostService")
+		return
+	}
+
+	logger.GetLogger().Infof("semantic search, agent description: %v", ssq)
+	// 3. 参数校验
+	if ssq.Query == "" {
+		logger.GetLogger().Error("Semantic search agent description cannot be empty")
+		Response400(w, "Query cannot be empty")
+		return
+	}
+
+	svcManager := servicemanager.NewServiceManager()
+	svc, err := svcManager.SemanticSearch(ssq)
+	if err != nil {
+		logger.GetLogger().Error("Failed to Semantic search by agent description, err: %v", err)
+		Response500(w, "Failed to Semantic search by agent description")
+		return
+	}
+
+	// marashal serviceUnit list
+	j, err := json.Marshal(svc)
+	if err != nil {
+		s.log.Errorf("Failed to marshal json data when build response: %v", err)
+		Response500(w, "Failed to marshal json data when build response")
+		return
+	}
+
+	Response201(w, j)
+}
+
+
 // POST - HTTP /services
 func (s *HTTPServer) PostServiceHandler(w http.ResponseWriter, r *http.Request) {
 	CheckUpdateSvc()

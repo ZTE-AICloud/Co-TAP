@@ -2,7 +2,9 @@ package servicemanager
 
 import (
 	"uapregistry/logger"
+	chroma "uapregistry/storage/chromaagent"
 	agent "uapregistry/storage/consulagent"
+	"uapregistry/types"
 	t "uapregistry/types"
 )
 
@@ -20,7 +22,7 @@ var NewServiceManager = func() *ServiceManager {
 		return svcManager
 	}
 
-	localHandler := NewServiceHandler(agent.GetLocalAgent())
+	localHandler := NewServiceHandler(chroma.GetChromaAgentManager(), agent.GetLocalAgent())
 	svcManager = BuildServiceManagerByHandler(localHandler, nil)
 
 	return svcManager
@@ -35,6 +37,10 @@ func BuildServiceManagerByHandler(localHandler, remoteHandler *ServiceHandler) *
 
 func (svcManager *ServiceManager) GetService(serviceName string) (svcs []*t.Service, err error) {
 	return svcManager.localHandler.GetServicesByName(serviceName)
+}
+
+func (svcManager *ServiceManager) SemanticSearch(ssq *types.SemanticSearchRequest) (svcs []*t.Service, err error) {
+	return svcManager.localHandler.SemanticSearch(ssq)
 }
 
 func (svcManager *ServiceManager) PostService(su *t.Service, overWrite bool) (*t.Service, int, error) {

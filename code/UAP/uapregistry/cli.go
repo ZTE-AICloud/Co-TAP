@@ -22,6 +22,7 @@ import (
 	"uapregistry/servicemanager"
 	"uapregistry/storage/agentgraphstorage"
 	agent "uapregistry/storage/consulagent"
+	chroma "uapregistry/storage/chromaagent"
 	"uapregistry/storage/consulagent/cache"
 	"uapregistry/types"
 	"uapregistry/types/agentgraphmodels"
@@ -172,6 +173,11 @@ func (cli *CLI) Run(args []string) int {
 
 	// Create Consul Agent and set watch package var
 	err = agent.InitLocalAgent(agentCfg)
+	if err != nil {
+		return cli.handleError(err, ExitCodeAgentError)
+	}
+
+	err = chroma.InitChromaAgent()
 	if err != nil {
 		return cli.handleError(err, ExitCodeAgentError)
 	}

@@ -127,6 +127,7 @@ func (s *HTTPServer) registerHandlers() {
 	s.router.HandleFunc("/services/{id}/renewal", s.RenewalHandler).Methods("PUT")
 	s.router.HandleFunc("/services/{id}/healthcheck", s.ServiceHealthCheckHandler).Methods("GET")
 	s.router.HandleFunc("/services/{serviceName}", s.GetServiceHandler).Methods("GET")
+	s.router.HandleFunc("/api/v1/agents/search", s.SemanticSearchHandler).Methods("POST")
 
 	s.router.HandleFunc("/routes", s.PostRouteHandler).Methods("POST")
 	s.router.HandleFunc("/routes", s.GetAllRoutesHandler).Methods("GET")

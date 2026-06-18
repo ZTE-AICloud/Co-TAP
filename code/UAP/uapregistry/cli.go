@@ -20,9 +20,11 @@ import (
 	"uapregistry/leadermanager"
 	"uapregistry/logger"
 	"uapregistry/servicemanager"
+	"uapregistry/storage/agentgraphstorage"
 	agent "uapregistry/storage/consulagent"
 	"uapregistry/storage/consulagent/cache"
 	"uapregistry/types"
+	"uapregistry/types/agentgraphmodels"
 	"uapregistry/utils"
 )
 
@@ -154,14 +156,19 @@ func (cli *CLI) Run(args []string) int {
 	// Init Config
 	config.InitConfig()
 	// Parse the flags
-	agentCfg, httpCfg, err := cli.ParseFlags(args[1:])
+	agentCfg, httpCfg, agentGraphConfig, err := cli.ParseFlags(args[1:])
 	if err != nil {
 		if err == flag.ErrHelp {
 			return 0
 		}
 		return cli.handleError(err, ExitCodeParseFlagsError)
 	}
-	cli.showConfigs(agentCfg, httpCfg)
+	cli.showConfigs(agentCfg, httpCfg, agentGraphConfig)
+
+	err = agentgraphstorage.InitDatabase(agentGraphConfig)
+	if err != nil {
+		return cli.handleError(err, ExitCodeAgentError)
+	}
 
 	// Create Consul Agent and set watch package var
 	err = agent.InitLocalAgent(agentCfg)
@@ -176,7 +183,7 @@ func (cli *CLI) Run(args []string) int {
 		leadermanager.StartLeaderManager(agent.GetLocalAgent().GetConsulClient(), utils.GetNodeIP())
 	}
 
-	cli.log.Info("start http server on %s", httpCfg.GetHTTPPort())
+	cli.log.Infof("start http server on %s", httpCfg.GetHTTPPort())
 	// Launch the HTTP Server
 	httpCh := make(chan error)
 	cli.servers = append(cli.servers, rest.StartHTTPServer(httpCfg, httpCh)...)
@@ -283,10 +290,10 @@ func (cli *CLI) shutdown() {
 }
 
 // ParseFlags - parse input params
-func (cli *CLI) ParseFlags(args []string) (*agent.Config, *rest.Config, error) {
+func (cli *CLI) ParseFlags(args []string) (agentCfg *agent.Config, httpCfg *rest.Config, agentConfig agentgraphmodels.DatabaseConfig, err error) {
 
-	agentCfg := agent.DefaultConfig()
-	httpCfg := rest.DefaultConfig()
+	agentCfg = agent.DefaultConfig()
+	httpCfg = rest.DefaultConfig()
 
 	flags := flag.NewFlagSet(Name, flag.ContinueOnError)
 	flags.SetOutput(cli.errStream)
@@ -307,12 +314,27 @@ func (cli *CLI) ParseFlags(args []string) (*agent.Config, *rest.Config, error) {
 		return nil
 	}), "bind-ip", "")
 
+	//
+	var agentGraphURI, agentGraphUsername, agentGraphPassword, agentGraphDatabase string
+	flags.StringVar(&agentGraphURI, "agentgraph-uri", "", "db connect uri")
+	flags.StringVar(&agentGraphUsername, "agentgraph-username", "", "db connect username")
+	flags.StringVar(&agentGraphPassword, "agentgraph-password", "", "db connect agentGraphPassword")
+	flags.StringVar(&agentGraphDatabase, "agentgraph-database", "", "db connect database name")
+
 	// If there was a parser error, stop
-	if err := flags.Parse(args); err != nil {
-		return nil, nil, err
+	if err = flags.Parse(args); err != nil {
+		cli.log.Errorf("failed to parse params:%v", err)
+		return
 	}
 
-	return agentCfg, httpCfg, nil
+	agentConfig = agentgraphmodels.DatabaseConfig{
+		URI:      agentGraphURI,
+		Username: agentGraphUsername,
+		Password: agentGraphPassword,
+		Database: agentGraphDatabase,
+	}
+
+	return
 }
 
 func (cli *CLI) handleError(err error, status int) int {
@@ -320,13 +342,19 @@ func (cli *CLI) handleError(err error, status int) int {
 	return status
 }
 
-func (cli *CLI) showConfigs(acfg *agent.Config, hcfg *rest.Config) {
+func (cli *CLI) showConfigs(acfg *agent.Config, hcfg *rest.Config, agentGraphConfig agentgraphmodels.DatabaseConfig) {
 	cli.log.Warn("Starting uapregistry:  ...")
 
 	cli.log.Warn("ConsulAgent Addr:", acfg.GetConsulAgent())
 	cli.log.Warnf("Bind IP:%v", hcfg.GetHTTPIPs())
 	cli.log.Warn("Listen Port:", hcfg.GetHTTPPort())
 	cli.log.Warn("HEALTH_CHECK_ENABLE:", config.GetHealthCheckEnable())
+
+	// do not output pwd to log, pwd ard confidential information,
+	cli.log.Warn("agent graph uri:", agentGraphConfig.URI)
+	cli.log.Warn("agent graph username:", agentGraphConfig.Username)
+	cli.log.Warn("agent graph database:", agentGraphConfig.Database)
+
 	cli.log.Flush()
 }
 
@@ -341,4 +369,14 @@ Options:
       Sets the address of the Consul instance
   -listen-port=<port>
       Sets the listen port of the http server
+  -agentgraph-uri=<uri>
+      agent graph database connection uri, neo4j://127.0.0.1:7687
+  -agentgraph-database=<databasename>
+      agent graph database database name
+  -agentgraph-uri=<uri>
+      agent graph database connection uri
+  -agentgraph-username=<username>
+      agent graph database username
+  -agentgraph-password=<password>
+      agent graph database password
 `

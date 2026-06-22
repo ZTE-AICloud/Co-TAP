@@ -147,6 +147,9 @@ func (svcHandler *ServiceHandler) registerService(svc *t.Service) error {
 
 func buildDescription(svc *t.Service) string {
 	var buf strings.Builder
+	if svc.AgentInfo == nil {
+		return ""
+	}
 	agentCard := svc.AgentInfo.A2AAgentCard
 
 	// 1. 遍历所有技能，按字段带前缀拼接

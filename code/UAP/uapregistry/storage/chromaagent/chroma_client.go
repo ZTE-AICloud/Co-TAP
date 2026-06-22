@@ -17,10 +17,38 @@ const DefaultSimilarityThreshold float32 = 0.5
 // 预编译正则，避免每次调用重复编译，提升性能
 var (
 	// 匹配需要移除的无意义特殊符号（保留中英文常用标点、汉字、数字、字母、空格）
-	specialCharRegex = regexp.MustCompile(`[^a-zA-Z0-9\u4e00-\u9fa5，。？！；：、“”‘’（）【】《》……—,.?!;:'"()\[\] ]`)
+	specialCharRegex = regexp.MustCompile(`[^a-zA-Z0-9\x{4e00}-\x{9fa5}，。？！；：、“”‘’（）【】《》……—,.?!;:'"()\[\] ]`)
 	// 匹配连续重复的标点符号，合并为单个
-	repeatPunctRegex = regexp.MustCompile(`([，。？！；：、,.?!;:])\1+`)
 )
+
+func DeduplicatePunctuation(s string) string {
+	if len(s) <= 1 {
+		return s
+	}
+
+	// 定义需要去重的标点集合
+	punctSet := map[rune]bool{
+		'，': true, '。': true, '？': true, '！': true,
+		'；': true, '：': true, '、': true,
+		',': true, '.': true, '?': true, '!': true,
+		';': true, ':': true,
+	}
+
+	runes := []rune(s)
+	result := make([]rune, 0, len(runes))
+	var last rune
+
+	for _, r := range runes {
+		// 如果是标点且和上一个字符相同，跳过
+		if punctSet[r] && r == last {
+			continue
+		}
+		result = append(result, r)
+		last = r
+	}
+
+	return string(result)
+}
 
 // NewChromaClient 初始化 Agent
 func NewChromaClient(timeout time.Duration) (*ChromaClient, error) {
@@ -319,7 +347,7 @@ func PreprocessQuery(queryText string) string {
 	cleaned = specialCharRegex.ReplaceAllString(cleaned, "")
 
 	// 5. 合并连续重复的标点（如！！！→！，，，→，），减少向量噪声
-	cleaned = repeatPunctRegex.ReplaceAllString(cleaned, "$1")
+	cleaned = DeduplicatePunctuation(cleaned)
 
 	return cleaned
 }

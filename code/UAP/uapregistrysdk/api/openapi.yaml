@@ -315,6 +315,48 @@ paths:
         "500":
           description: Internal Server Error
       summary: Update a route
+  /api/v1/agents/search:
+    post:
+      tags:
+        - agents
+      description: Semantic search for agents/services by natural language query
+      summary: Semantic search agents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SemanticSearchRequest"
+            examples:
+              basic_query:
+                summary: 基础查询
+                value:
+                  query: "帮我找一个能检查Python代码安全漏洞的代理"
+                  topK: 5
+              with_constraints:
+                summary: 带约束条件的查询
+                value:
+                  query: "需要一个可以生成APA格式参考文献的研究助理"
+                  requiredInputModes: ["text/plain"]
+                  requiredOutputModes: ["application/json"]
+                  requiredCapabilities:
+                    streaming: true
+                  minRelevanceScore: 0.5
+                  topK: 3
+                  includeExplanation: true
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Service"
+                type: array
+          description: Successful semantic search
+        "400":
+          description: Bad request - invalid query parameters
+        "500":
+          description: Internal Server Error
 components:
   schemas:
     EphemeralCheck:
@@ -1042,4 +1084,107 @@ components:
       - name
       - port
       - protocol
+      type: object
+    AgentCapabilities:
+      additionalProperties: false
+      description: Agent capability flags for capability filtering
+      properties:
+        streaming:
+          description: 是否支持流式输出
+          type: boolean
+        push_notifications:
+          description: 是否支持推送通知
+          type: boolean
+        extended_agent_card:
+          description: 是否支持扩展代理卡片
+          type: boolean
+      type: object
+    MatchExplanation:
+      additionalProperties: false
+      description: Detailed match explanation when include_explanation is true
+      properties:
+        matched_fields:
+          description: 匹配到的字段列表
+          items:
+            type: string
+          type: array
+        match_snippets:
+          description: 文本匹配片段列表
+          items:
+            type: string
+          type: array
+        field_scores:
+          additionalProperties:
+            format: float
+            type: number
+          description: 各字段的匹配得分
+          type: object
+      type: object
+    SemanticSearchRequest:
+      additionalProperties: false
+      description: Schema for semantic search request
+      example:
+        query: "帮我找一个能检查Python代码中SQL注入漏洞的安全审计工具"
+        required_input_modes:
+        - text/plain
+        required_output_modes:
+        - application/json
+        required_capabilities:
+          streaming: true
+        provider_organization: "Security AI Labs"
+        min_relevance_score: 0.5
+        top_k: 5
+        sort_by: relevance
+        include_explanation: true
+        allow_partial_matches: true
+      properties:
+        query:
+          description: 用户的自然语言查询内容
+          type: string
+        required_input_modes:
+          description: 必需的输入媒体类型，指定后仅返回支持该输入模式的代理
+          items:
+            type: string
+          type: array
+        required_output_modes:
+          description: 必需的输出媒体类型，指定后仅返回支持该输出模式的代理
+          items:
+            type: string
+          type: array
+        required_capabilities:
+          $ref: "#/components/schemas/AgentCapabilities"
+        provider_organization:
+          description: 提供商组织过滤，指定后仅返回该组织提供的代理
+          type: string
+        min_relevance_score:
+          default: 0.3
+          description: 最小相关度阈值，范围 0.0 - 1.0，低于此阈值的结果不会返回
+          format: float
+          maximum: 1
+          minimum: 0
+          type: number
+        top_k:
+          default: 10
+          description: 返回的最大结果数量，最大值 100
+          maximum: 100
+          minimum: 1
+          type: integer
+        sort_by:
+          default: relevance
+          description: 结果排序策略
+          enum:
+          - relevance
+          - alphabetical
+          - provider
+          type: string
+        include_explanation:
+          default: false
+          description: 是否返回详细的匹配解释，开启后返回每个结果的字段级得分和匹配片段
+          type: boolean
+        allow_partial_matches:
+          default: true
+          description: 是否允许部分匹配，开启后无完美匹配时会放宽约束返回近似结果
+          type: boolean
+      required:
+      - query
       type: object

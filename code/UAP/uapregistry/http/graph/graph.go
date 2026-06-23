@@ -1,4 +1,4 @@
-package agentgraph
+package graph
 
 import (
 	"encoding/json"
@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"uapregistry/logger"
-	"uapregistry/storage/agentgraphstorage"
-	"uapregistry/types/agentgraphmodels"
+	graphstorage "uapregistry/storage/graph"
+	"uapregistry/types"
 
 	"github.com/gorilla/mux"
 )
@@ -16,7 +16,7 @@ import (
 type GraphController struct {
 }
 
-// GET - HTTP /agentgraph/graph?page=0&limit=1000
+// GET - HTTP /knowledgegraph/graph?page=0&limit=1000
 func (c *GraphController) Export(w http.ResponseWriter, r *http.Request) {
 	pageStr := mux.Vars(r)["page"]
 	limitStr := mux.Vars(r)["limit"]
@@ -25,14 +25,14 @@ func (c *GraphController) Export(w http.ResponseWriter, r *http.Request) {
 		ResponseCodeBody(w, http.StatusUnprocessableEntity, err.Error())
 	}
 
-	graph, err := agentgraphstorage.ExportGraph(page, limit)
+	graph, err := graphstorage.ExportGraph(page, limit)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
 
-		response := agentgraphmodels.GraphResponse{
+		response := types.GraphResponse{
 			Graph: graph,
-			Metadata: agentgraphmodels.ExportMetadata{
+			Metadata: types.ExportMetadata{
 				ExportedAt:        time.Now().Format(time.RFC3339),
 				NodeCount:         len(graph.Nodes),
 				RelationshipCount: len(graph.Relationships),
@@ -43,7 +43,7 @@ func (c *GraphController) Export(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// GET - HTTP /agentgraph/graph
+// GET - HTTP /knowledgegraph/graph
 func (c *GraphController) Import(w http.ResponseWriter, r *http.Request) {
 	graph, err := c.loadGraphData(w, r)
 
@@ -51,7 +51,7 @@ func (c *GraphController) Import(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nodes, err := agentgraphstorage.ImportGraph(graph)
+	nodes, err := graphstorage.ImportGraph(graph)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -59,7 +59,7 @@ func (c *GraphController) Import(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (c *GraphController) loadGraphData(w http.ResponseWriter, r *http.Request) (graph agentgraphmodels.Graph, err error) {
+func (c *GraphController) loadGraphData(w http.ResponseWriter, r *http.Request) (graph types.Graph, err error) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		logger.GetLogger().Errorf("failed to ReadAll http body:%v", err)

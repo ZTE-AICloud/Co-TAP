@@ -1,4 +1,4 @@
-package agentgraph
+package graph
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"uapregistry/logger"
-	"uapregistry/storage/agentgraphstorage"
+	graphstorage "uapregistry/storage/graph"
 
 	"github.com/gorilla/mux"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -16,7 +16,7 @@ import (
 type RelationshipController struct {
 }
 
-// POST - HTTP /agentgraph/relationships/bulk
+// POST - HTTP /knowledgegraph/relationships/bulk
 func (c *RelationshipController) CreateBulk(w http.ResponseWriter, r *http.Request) {
 	var relationships []neo4j.Relationship
 	body, err := io.ReadAll(r.Body)
@@ -34,7 +34,7 @@ func (c *RelationshipController) CreateBulk(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	relationships, err = agentgraphstorage.CreateRelationships(relationships)
+	relationships, err = graphstorage.CreateRelationships(relationships)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -42,7 +42,7 @@ func (c *RelationshipController) CreateBulk(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-// POST - HTTP /agentgraph/relationships
+// POST - HTTP /knowledgegraph/relationships
 func (c *RelationshipController) Create(w http.ResponseWriter, r *http.Request) {
 	var relationship neo4j.Relationship
 	body, err := io.ReadAll(r.Body)
@@ -60,7 +60,7 @@ func (c *RelationshipController) Create(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	relationship, err = agentgraphstorage.CreateRelationship(relationship)
+	relationship, err = graphstorage.CreateRelationship(relationship)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -68,7 +68,7 @@ func (c *RelationshipController) Create(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-// PUT - HTTP /agentgraph/relationships/{elementId}
+// PUT - HTTP /knowledgegraph/relationships/{elementId}
 func (c *RelationshipController) Put(w http.ResponseWriter, r *http.Request) {
 	elementId := mux.Vars(r)["elementId"]
 
@@ -88,7 +88,7 @@ func (c *RelationshipController) Put(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	relationships, err := agentgraphstorage.UpdateRelationship(elementId, props)
+	relationships, err := graphstorage.UpdateRelationship(elementId, props)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 		return
@@ -104,11 +104,11 @@ func (c *RelationshipController) Put(w http.ResponseWriter, r *http.Request) {
 	ResponseCodeBody(w, http.StatusCreated, relationships[0])
 }
 
-// Delete - HTTP /agentgraph/relationships/{elementId}
+// Delete - HTTP /knowledgegraph/relationships/{elementId}
 func (c *RelationshipController) Delete(w http.ResponseWriter, r *http.Request) {
 	elementId := mux.Vars(r)["elementId"]
 
-	_, err := agentgraphstorage.DeleteRelationship(elementId)
+	_, err := graphstorage.DeleteRelationship(elementId)
 
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
@@ -118,11 +118,11 @@ func (c *RelationshipController) Delete(w http.ResponseWriter, r *http.Request) 
 	ResponseCodeBody(w, http.StatusNoContent, "")
 }
 
-// GET - HTTP /agentgraph/relationships/{elementId}
+// GET - HTTP /knowledgegraph/relationships/{elementId}
 func (c *RelationshipController) GetRelationship(w http.ResponseWriter, r *http.Request) {
 	elementId := mux.Vars(r)["elementId"]
 
-	relations, err := agentgraphstorage.QueryRelationship(elementId)
+	relations, err := graphstorage.QueryRelationship(elementId)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -130,7 +130,7 @@ func (c *RelationshipController) GetRelationship(w http.ResponseWriter, r *http.
 	}
 }
 
-// GET - HTTP /agentgraph/relationships?page=1&limit=100&type=depend
+// GET - HTTP /knowledgegraph/relationships?page=1&limit=100&type=depend
 func (c *RelationshipController) GetNodes(w http.ResponseWriter, r *http.Request) {
 
 	typ := r.URL.Query().Get("type")
@@ -145,7 +145,7 @@ func (c *RelationshipController) GetNodes(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	relations, err := agentgraphstorage.QueryRelationships(typ, page, limit)
+	relations, err := graphstorage.QueryRelationships(typ, page, limit)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {

@@ -1,4 +1,4 @@
-package agentgraph
+package graph
 
 import (
 	"encoding/json"

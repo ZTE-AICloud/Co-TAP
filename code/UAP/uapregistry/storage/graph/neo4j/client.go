@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 	"uapregistry/logger"
-	"uapregistry/types/agentgraphmodels"
+	"uapregistry/types"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
@@ -21,11 +21,11 @@ type Config struct {
 // Client Neo4j 客户端
 type Client struct {
 	Driver neo4j.DriverWithContext
-	Config agentgraphmodels.DatabaseConfig
+	Config types.DatabaseConfig
 }
 
 // NewClient 创建新的 Neo4j 客户端
-func NewClient(config agentgraphmodels.DatabaseConfig) (*Client, error) {
+func NewClient(config types.DatabaseConfig) (*Client, error) {
 	authToken := neo4j.BasicAuth(config.Username, config.Password, "")
 	driver, err := neo4j.NewDriverWithContext(config.URI, authToken)
 	if err != nil {
@@ -62,7 +62,7 @@ func (c *Client) Close() error {
 // ImportGraph 创建节点
 // label - 节点标签
 // properties - 节点属性
-func (c *Client) ImportGraph(graph agentgraphmodels.Graph) (newGrahp agentgraphmodels.Graph, err error) {
+func (c *Client) ImportGraph(graph types.Graph) (newGrahp types.Graph, err error) {
 
 	session := c.Driver.NewSession(context.Background(), neo4j.SessionConfig{DatabaseName: c.Config.Database})
 	defer session.Close(context.Background())
@@ -104,7 +104,7 @@ func (c *Client) ImportGraph(graph agentgraphmodels.Graph) (newGrahp agentgraphm
 
 	return
 }
-func (c *Client) ExportGraph(page, limit int) (graph agentgraphmodels.Graph, err error) {
+func (c *Client) ExportGraph(page, limit int) (graph types.Graph, err error) {
 	session := c.Driver.NewSession(context.Background(), neo4j.SessionConfig{DatabaseName: c.Config.Database})
 	defer session.Close(context.Background())
 

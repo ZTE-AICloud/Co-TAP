@@ -7,7 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"uapregistry/http/agentgraph"
+	"uapregistry/http/graph"
 	"uapregistry/logger"
 )
 
@@ -116,7 +116,7 @@ func StartHTTPServer(conf *Config, errCh chan error) []*http.Server {
 }
 
 func (s *HTTPServer) registerHandlers() {
-	s.registAgentGraphHandlers()
+	s.registGraphHandlers()
 
 	s.router.HandleFunc("/health", s.HealthCheckHandler).Methods("GET")
 
@@ -136,34 +136,34 @@ func (s *HTTPServer) registerHandlers() {
 	s.router.HandleFunc("/routes/{routeName}", s.UpdateRouteHandler).Methods("PUT")
 }
 
-func (s *HTTPServer) registAgentGraphHandlers() {
+func (s *HTTPServer) registGraphHandlers() {
 	logger.GetLogger().Info("regist agent graph handlers")
-	graphController := &agentgraph.GraphController{}
-	// /agentgraph/graph?page=0&limit=1000
-	s.router.HandleFunc("/agentgraph/graph", graphController.Export).Methods(http.MethodGet)
-	s.router.HandleFunc("/agentgraph/graph", graphController.Import).Methods(http.MethodPost)
+	graphController := &graph.GraphController{}
+	// /knowledgegraph/graph?page=0&limit=1000
+	s.router.HandleFunc("/knowledgegraph/graph", graphController.Export).Methods(http.MethodGet)
+	s.router.HandleFunc("/knowledgegraph/graph", graphController.Import).Methods(http.MethodPost)
 
-	nodeController := &agentgraph.NodeController{}
-	s.router.HandleFunc("/agentgraph/nodes", nodeController.Create).Methods(http.MethodPost)
-	s.router.HandleFunc("/agentgraph/nodes/bulk", nodeController.CreateBulk).Methods(http.MethodPost)
-	s.router.HandleFunc("/agentgraph/nodes/{elementId}", nodeController.Put).Methods(http.MethodPut)
-	s.router.HandleFunc("/agentgraph/nodes/{elementId}", nodeController.Delete).Methods(http.MethodDelete)
+	nodeController := &graph.NodeController{}
+	s.router.HandleFunc("/knowledgegraph/nodes", nodeController.Create).Methods(http.MethodPost)
+	s.router.HandleFunc("/knowledgegraph/nodes/bulk", nodeController.CreateBulk).Methods(http.MethodPost)
+	s.router.HandleFunc("/knowledgegraph/nodes/{elementId}", nodeController.Put).Methods(http.MethodPut)
+	s.router.HandleFunc("/knowledgegraph/nodes/{elementId}", nodeController.Delete).Methods(http.MethodDelete)
 
-	// /agentgraph/nodes/{agentCardName}/namespace/{ns1}?cluster=c1
-	s.router.HandleFunc("/agentgraph/nodes/{agentCardName}/namespace/{ns1}", nodeController.GetNodesByName).Methods(http.MethodGet)
-	s.router.HandleFunc("/agentgraph/nodes/{elementId}", nodeController.GetNodeByID).Methods(http.MethodGet)
-	// /agentgraph/nodes?page=0&limit=100&label=Person
-	s.router.HandleFunc("/agentgraph/nodes", nodeController.GetNodes).Methods(http.MethodGet)
-	// /agentgraph/nodes/{elementId}/relations
-	s.router.HandleFunc("/agentgraph/nodes/{elementId}/relations", nodeController.GetRelatedNodes).Methods(http.MethodGet)
+	// /knowledgegraph/nodes/{agentCardName}/namespace/{ns1}?cluster=c1
+	s.router.HandleFunc("/knowledgegraph/nodes/{agentCardName}/namespace/{ns1}", nodeController.GetNodesByName).Methods(http.MethodGet)
+	s.router.HandleFunc("/knowledgegraph/nodes/{elementId}", nodeController.GetNodeByID).Methods(http.MethodGet)
+	// /knowledgegraph/nodes?page=0&limit=100&label=Person
+	s.router.HandleFunc("/knowledgegraph/nodes", nodeController.GetNodes).Methods(http.MethodGet)
+	// /knowledgegraph/nodes/{elementId}/relations
+	s.router.HandleFunc("/knowledgegraph/nodes/{elementId}/relations", nodeController.GetRelatedNodes).Methods(http.MethodGet)
 
-	relationshipController := &agentgraph.RelationshipController{}
-	s.router.HandleFunc("/agentgraph/relationships", relationshipController.Create).Methods(http.MethodPost)
-	s.router.HandleFunc("/agentgraph/relationships/bulk", relationshipController.CreateBulk).Methods(http.MethodPost)
-	s.router.HandleFunc("/agentgraph/relationships/{elementId}", relationshipController.Put).Methods(http.MethodPut)
-	s.router.HandleFunc("/agentgraph/relationships/{elementId}", relationshipController.Delete).Methods(http.MethodDelete)
+	relationshipController := &graph.RelationshipController{}
+	s.router.HandleFunc("/knowledgegraph/relationships", relationshipController.Create).Methods(http.MethodPost)
+	s.router.HandleFunc("/knowledgegraph/relationships/bulk", relationshipController.CreateBulk).Methods(http.MethodPost)
+	s.router.HandleFunc("/knowledgegraph/relationships/{elementId}", relationshipController.Put).Methods(http.MethodPut)
+	s.router.HandleFunc("/knowledgegraph/relationships/{elementId}", relationshipController.Delete).Methods(http.MethodDelete)
 
-	s.router.HandleFunc("/agentgraph/relationships/{elementId}", relationshipController.GetRelationship).Methods(http.MethodGet)
-	// /agentgraph/relationships?page=0&limit=100&type=depend
-	s.router.HandleFunc("/agentgraph/relationships", relationshipController.GetNodes).Methods(http.MethodGet)
+	s.router.HandleFunc("/knowledgegraph/relationships/{elementId}", relationshipController.GetRelationship).Methods(http.MethodGet)
+	// /knowledgegraph/relationships?page=0&limit=100&type=depend
+	s.router.HandleFunc("/knowledgegraph/relationships", relationshipController.GetNodes).Methods(http.MethodGet)
 }

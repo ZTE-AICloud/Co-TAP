@@ -1,4 +1,4 @@
-package agentgraph
+package graph
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"uapregistry/logger"
-	"uapregistry/storage/agentgraphstorage"
+	graphstorage "uapregistry/storage/graph"
 
 	"github.com/gorilla/mux"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -16,7 +16,7 @@ import (
 type NodeController struct {
 }
 
-// POST - HTTP /agentgraph/nodes/bulk
+// POST - HTTP /knowledgegraph/nodes/bulk
 func (c *NodeController) CreateBulk(w http.ResponseWriter, r *http.Request) {
 	nodes, err := c.loadNodes(w, r)
 
@@ -24,7 +24,7 @@ func (c *NodeController) CreateBulk(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newNode, err := agentgraphstorage.CreateNodes(nodes)
+	newNode, err := graphstorage.CreateNodes(nodes)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -32,7 +32,7 @@ func (c *NodeController) CreateBulk(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// POST - HTTP /agentgraph/nodes
+// POST - HTTP /knowledgegraph/nodes
 func (c *NodeController) Create(w http.ResponseWriter, r *http.Request) {
 	node, err := c.loadNode(w, r)
 
@@ -40,7 +40,7 @@ func (c *NodeController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newNode, err := agentgraphstorage.CreateNode(node)
+	newNode, err := graphstorage.CreateNode(node)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -48,7 +48,7 @@ func (c *NodeController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// PUT - HTTP /agentgraph/nodes/{elementId}
+// PUT - HTTP /knowledgegraph/nodes/{elementId}
 func (c *NodeController) Put(w http.ResponseWriter, r *http.Request) {
 	elementId := mux.Vars(r)["elementId"]
 
@@ -57,7 +57,7 @@ func (c *NodeController) Put(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nodes, err := agentgraphstorage.UpdateNode(elementId, newNode)
+	nodes, err := graphstorage.UpdateNode(elementId, newNode)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -65,11 +65,11 @@ func (c *NodeController) Put(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Delete - HTTP /agentgraph/nodes/{elementId}
+// Delete - HTTP /knowledgegraph/nodes/{elementId}
 func (c *NodeController) Delete(w http.ResponseWriter, r *http.Request) {
 	elementId := mux.Vars(r)["elementId"]
 
-	_, err := agentgraphstorage.DeleteNode(elementId)
+	_, err := graphstorage.DeleteNode(elementId)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -110,13 +110,13 @@ func (c *NodeController) loadNodes(w http.ResponseWriter, r *http.Request) (node
 	return
 }
 
-// GET - HTTP /agentgraph/nodes/{agentCardName}/namespace/{ns1}?cluster=c1
+// GET - HTTP /knowledgegraph/nodes/{agentCardName}/namespace/{ns1}?cluster=c1
 func (c *NodeController) GetNodesByName(w http.ResponseWriter, r *http.Request) {
 	agentCardName := mux.Vars(r)["agentCardName"]
 	namespace := mux.Vars(r)["namespace"]
 	cluster := r.URL.Query().Get("cluster")
 
-	nodes, err := agentgraphstorage.QueryNode(agentCardName, namespace, cluster)
+	nodes, err := graphstorage.QueryNode(agentCardName, namespace, cluster)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -124,7 +124,7 @@ func (c *NodeController) GetNodesByName(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-// GET - HTTP /agentgraph/nodes?page=1&limit=100&label=Person
+// GET - HTTP /knowledgegraph/nodes?page=1&limit=100&label=Person
 func (c *NodeController) GetNodes(w http.ResponseWriter, r *http.Request) {
 	label := r.URL.Query().Get("label")
 	pageStr := r.URL.Query().Get("page")
@@ -138,7 +138,7 @@ func (c *NodeController) GetNodes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nodes, err := agentgraphstorage.QueryNodes(label, page, limit)
+	nodes, err := graphstorage.QueryNodes(label, page, limit)
 
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
@@ -147,11 +147,11 @@ func (c *NodeController) GetNodes(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// GET - HTTP /agentgraph/nodes/{elementId}
+// GET - HTTP /knowledgegraph/nodes/{elementId}
 func (c *NodeController) GetNodeByID(w http.ResponseWriter, r *http.Request) {
 	elementId := mux.Vars(r)["elementId"]
 
-	node, err := agentgraphstorage.QueryNodeByID(elementId)
+	node, err := graphstorage.QueryNodeByID(elementId)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -159,10 +159,10 @@ func (c *NodeController) GetNodeByID(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// GET - HTTP /agentgraph/nodes/{elementId}/relations
+// GET - HTTP /knowledgegraph/nodes/{elementId}/relations
 func (c *NodeController) GetRelatedNodes(w http.ResponseWriter, r *http.Request) {
 	elementId := mux.Vars(r)["elementId"]
-	nodes, err := agentgraphstorage.QueryRelatedNodes(elementId)
+	nodes, err := graphstorage.QueryRelatedNodes(elementId)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {

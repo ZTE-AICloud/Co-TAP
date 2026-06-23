@@ -1,16 +1,16 @@
-package agentgraphstorage
+package graph
 
 import (
 	"uapregistry/logger"
-	neo4jclient "uapregistry/storage/agentgraphstorage/neo4j"
-	"uapregistry/types/agentgraphmodels"
+	neo4jclient "uapregistry/storage/graph/neo4j"
+	"uapregistry/types"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
 type Database interface {
-	ImportGraph(graph agentgraphmodels.Graph) (newGraph agentgraphmodels.Graph, err error)
-	ExportGraph(page, limit int) (graph agentgraphmodels.Graph, err error)
+	ImportGraph(graph types.Graph) (newGraph types.Graph, err error)
+	ExportGraph(page, limit int) (graph types.Graph, err error)
 
 	CreateNode(node neo4j.Node) (newNode neo4j.Node, err error)
 	CreateNodes(nodes []neo4j.Node) (newNodes []neo4j.Node, err error)
@@ -25,7 +25,7 @@ type Database interface {
 	QueryNodeByID(id string) (node neo4j.Node, err error)
 	QueryNode(name, namespace, cluster string) (nodes []neo4j.Node, err error)
 	QueryNodes(label string, page, limit int) (nodes []neo4j.Node, err error)
-	QueryRelationshipsByNode(nodeId string) (relations []agentgraphmodels.RelatedNode, err error)
+	QueryRelationshipsByNode(nodeId string) (relations []types.RelatedNode, err error)
 
 	QueryRelationship(elementId string) (relatinships []neo4j.Relationship, err error)
 	QueryRelationships(typ string, page, limit int) (relatinships []neo4j.Relationship, err error)
@@ -34,7 +34,7 @@ type Database interface {
 var client Database
 var log = logger.GetLogger()
 
-func InitDatabase(config agentgraphmodels.DatabaseConfig) error {
+func InitDatabase(config types.DatabaseConfig) error {
 	if config.URI == "" || config.Username == "" || config.Password == "" || config.Database == "" {
 		log.Info("agent graph database config is empty, skip init agent graph database")
 		return nil
@@ -51,11 +51,11 @@ func InitDatabase(config agentgraphmodels.DatabaseConfig) error {
 	return err
 }
 
-func ImportGraph(graph agentgraphmodels.Graph) (newGraph agentgraphmodels.Graph, err error) {
+func ImportGraph(graph types.Graph) (newGraph types.Graph, err error) {
 	return client.ImportGraph(graph)
 }
 
-func ExportGraph(page, limit int) (newGraph agentgraphmodels.Graph, err error) {
+func ExportGraph(page, limit int) (newGraph types.Graph, err error) {
 	return client.ExportGraph(page, limit)
 }
 
@@ -101,7 +101,7 @@ func QueryNodes(label string, page, limit int) (node []neo4j.Node, err error) {
 	return client.QueryNodes(label, page, limit)
 }
 
-func QueryRelatedNodes(elementId string) (relatedNodes []agentgraphmodels.RelatedNode, err error) {
+func QueryRelatedNodes(elementId string) (relatedNodes []types.RelatedNode, err error) {
 	return client.QueryRelationshipsByNode(elementId)
 }
 

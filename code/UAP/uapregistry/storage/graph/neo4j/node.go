@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
-	"uapregistry/types/agentgraphmodels"
+	"uapregistry/types"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
@@ -55,7 +55,8 @@ func (c *Client) generateCreateNodeParams(node neo4j.Node) (cypher string, param
 
 	// 处理标签列表
 	if len(node.Labels) > 0 {
-		cypherBuild.WriteString(" SET n:" + strings.Join(node.Labels, ":"))
+		cypherBuild.WriteString(" SET n:")
+		cypherBuild.WriteString(strings.Join(node.Labels, ":"))
 	}
 
 	// 添加返回值
@@ -206,7 +207,7 @@ func (c *Client) QueryNode(agentName, namespace, cluster string) (nodes []neo4j.
 	return c.executeQueryNode(cypher, params)
 }
 
-func (c *Client) QueryRelationshipsByNode(elementId string) (relatedNodes []agentgraphmodels.RelatedNode, err error) {
+func (c *Client) QueryRelationshipsByNode(elementId string) (relatedNodes []types.RelatedNode, err error) {
 	cypher := `
 		MATCH (n)-[r]-(neighbor)
 		WHERE elementId(n) = $elementId
@@ -237,7 +238,7 @@ func (c *Client) QueryRelationshipsByNode(elementId string) (relatedNodes []agen
 
 		relationship := relationshipRaw.(neo4j.Relationship)
 
-		relatedNodes = append(relatedNodes, agentgraphmodels.RelatedNode{
+		relatedNodes = append(relatedNodes, types.RelatedNode{
 			Node:         node,
 			Relationship: relationship,
 		})

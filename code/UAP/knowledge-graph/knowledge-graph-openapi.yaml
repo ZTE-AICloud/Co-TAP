@@ -1,0 +1,606 @@
+components:
+  schemas:
+    neo4j.Node:
+      properties:
+        ElementId:
+          description: ElementId of this Node.
+          type: string
+        Id:
+          description: 'Deprecated: Id is deprecated and will be removed in 6.0. Use
+            ElementId instead.'
+          type: integer
+        Labels:
+          description: Labels attached to this Node.
+          items:
+            type: string
+          type: array
+        Props:
+          additionalProperties: {}
+          description: Properties of this Node.
+          type: object
+      type: object
+    neo4j.Relationship:
+      properties:
+        ElementId:
+          description: ElementId of this Relationship.
+          type: string
+        EndElementId:
+          description: ElementId of the end Node of this Relationship.
+          type: string
+        EndId:
+          description: 'Deprecated: EndId is deprecated and will be removed in 6.0.
+            Use EndElementId instead.'
+          type: integer
+        Id:
+          description: 'Deprecated: Id is deprecated and will be removed in 6.0. Use
+            ElementId instead.'
+          type: integer
+        Props:
+          additionalProperties: {}
+          description: Properties of this Relationship.
+          type: object
+        StartElementId:
+          description: ElementId of the start Node of this Relationship.
+          type: string
+        StartId:
+          description: 'Deprecated: StartId is deprecated and will be removed in 6.0.
+            Use StartElementId instead.'
+          type: integer
+        Type:
+          description: Type of this Relationship.
+          type: string
+      type: object
+    types.ExportMetadata:
+      properties:
+        exportedAt:
+          type: string
+        format:
+          type: string
+        nodeCount:
+          type: integer
+        relationshipCount:
+          type: integer
+      type: object
+    types.Graph:
+      properties:
+        nodes:
+          items:
+            $ref: '#/components/schemas/neo4j.Node'
+          type: array
+          uniqueItems: false
+        relationships:
+          items:
+            $ref: '#/components/schemas/neo4j.Relationship'
+          type: array
+          uniqueItems: false
+      type: object
+    types.GraphResponse:
+      properties:
+        data:
+          $ref: '#/components/schemas/types.Graph'
+        metadata:
+          $ref: '#/components/schemas/types.ExportMetadata'
+      type: object
+externalDocs:
+  description: ""
+  url: ""
+info:
+  description: 提供AI注册中心功能，以及知识图谱相关功能.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: AI 注册中心&知识图谱
+  version: "1.0"
+openapi: 3.1.0
+paths:
+  /knowledgegraph/graph:
+    get:
+      description: 获取完整知识图谱信息，可以支持分页查询
+      parameters:
+      - description: 分页参数,当前页数，从1开始,默认不分页
+        in: query
+        name: page
+        schema:
+          type: integer
+      - description: 分页参数，每页最大条数
+        in: query
+        name: limit
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/types.GraphResponse'
+          description: OK
+        "422":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: 获取完整的知识图谱信息
+      tags:
+      - graph
+    post:
+      description: 导入完整的图数据信息，包括节点和关系
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - type: object
+              - $ref: '#/components/schemas/types.Graph'
+                description: 图中的节点与关系信息
+                summary: graph
+        description: 图中的节点与关系信息
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/types.Graph'
+          description: 导入后的图信息
+        "422":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: 参数错误
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: 内部请求错误
+      summary: 导入完整的图数据
+      tags:
+      - graph
+  /knowledgegraph/nodes:
+    get:
+      description: 查询指定节点
+      parameters:
+      - description: 节点elementId
+        in: path
+        name: elementId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/neo4j.Node'
+          description: 查询成功
+        "404":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: 资源不存在
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: 查询指定节点
+      tags:
+      - node
+    post:
+      description: 创建单个节点
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - type: object
+              - $ref: '#/components/schemas/neo4j.Node'
+                description: 节点信息
+                summary: node
+        description: 节点信息
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/neo4j.Node'
+          description: Created
+        "422":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: 创建单个节点
+      tags:
+      - node
+  /knowledgegraph/nodes/{elementId}:
+    delete:
+      description: 删除单个节点
+      parameters:
+      - description: 旧节点elementId
+        in: path
+        name: elementId
+        required: true
+        schema:
+          type: string
+      - description: 是否强制删除，默认false，当存在相关的关系时不删除
+        in: query
+        name: force
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "204":
+          description: 删除成功
+        "409":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: 无法删除有关联的节点（force=false）
+        "422":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: 请求参数错误
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: 删除单个节点
+      tags:
+      - node
+    put:
+      description: 更新单个节点
+      parameters:
+      - description: 旧节点elementId
+        in: path
+        name: elementId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - type: object
+              - $ref: '#/components/schemas/neo4j.Node'
+                description: 节点信息
+                summary: node
+        description: 节点信息
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/neo4j.Node'
+          description: Created
+        "422":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: 更新单个节点
+      tags:
+      - node
+  /knowledgegraph/nodes/bulk:
+    post:
+      description: 导入节点数组批量创建节点
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - type: object
+              - items:
+                  $ref: '#/components/schemas/neo4j.Node'
+                title: nodes
+                type: array
+        description: 节点列表
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/neo4j.Node'
+                type: array
+          description: Created
+        "422":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: 批量创建节点
+      tags:
+      - node
+  /knowledgegraph/relationships:
+    get:
+      description: 查询节点列表
+      parameters:
+      - description: 分页参数,当前页数，从1开始,默认不分页
+        in: query
+        name: page
+        schema:
+          type: integer
+      - description: 分页参数，每页最大条数
+        in: query
+        name: limit
+        schema:
+          type: integer
+      - description: 关系分类 默认为空，不区分分类
+        in: query
+        name: type
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/neo4j.Relationship'
+                type: array
+          description: 查询成功
+        "422":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: 查询节点列表
+      tags:
+      - node
+    post:
+      description: 创建关系
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - type: object
+              - $ref: '#/components/schemas/neo4j.Relationship'
+                description: 关系
+                summary: relationship
+        description: 关系
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/neo4j.Relationship'
+          description: Created
+        "422":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: 创建关系
+      tags:
+      - relationship
+  /knowledgegraph/relationships/{elementId}:
+    delete:
+      description: 删除关系
+      parameters:
+      - description: 关系elementId
+        in: path
+        name: elementId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "204":
+          description: 删除成功
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: 删除关系
+      tags:
+      - relationship
+    get:
+      description: 查询指定关系
+      parameters:
+      - description: 关系elementId
+        in: path
+        name: elementId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/neo4j.Relationship'
+          description: 删除成功
+        "404":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: 资源不存在
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: 查询指定关系
+      tags:
+      - relationship
+    put:
+      description: 更新关系
+      parameters:
+      - description: 关系elementId
+        in: path
+        name: elementId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - type: object
+              - additionalProperties: {}
+                title: props
+                type: object
+        description: 关系属性
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/neo4j.Relationship'
+          description: Created
+        "422":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: 更新关系
+      tags:
+      - relationship
+  /knowledgegraph/relationships/bulk:
+    post:
+      description: 导入节点数组批量创建关系
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - type: object
+              - items:
+                  $ref: '#/components/schemas/neo4j.Relationship'
+                title: relationships
+                type: array
+        description: 关系列表
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/neo4j.Relationship'
+                type: array
+          description: Created
+        "422":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Unprocessable Entity
+        "500":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: 批量创建关系
+      tags:
+      - relationship
+servers:
+- url: localhost:8080/
+tags:
+- description: 知识图谱节点(CRUD操作, 批量创建操作)
+  name: node
+- description: 知识图谱关系(CRUD操作, 批量创建操作)
+  name: relationship
+- description: 知识图谱整体，节点与关系。支持导出与导入全量图数据
+  name: graph

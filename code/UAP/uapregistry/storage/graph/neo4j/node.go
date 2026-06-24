@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"uapregistry/logger"
 	"uapregistry/types"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
@@ -109,7 +110,7 @@ func (c *Client) CreateNodes(nodes []neo4j.Node) (newNodes []neo4j.Node, err err
 	return
 }
 
-func (c *Client) UpdateNode(elementId string, node neo4j.Node) (newNode []neo4j.Node, err error) {
+func (c *Client) UpdateNode(elementId string, node neo4j.Node) (newNode neo4j.Node, err error) {
 	params := make(map[string]any)
 	params["elementId"] = elementId
 	params["props"] = node.Props
@@ -132,7 +133,17 @@ func (c *Client) UpdateNode(elementId string, node neo4j.Node) (newNode []neo4j.
 
 	`, setNewLabel)
 
-	return c.executeQueryNode(cypher, params)
+	newNodes, err := c.executeQueryNode(cypher, params)
+	if err != nil {
+		return
+	}
+
+	if len(newNodes) == 0 {
+		err = fmt.Errorf("failed to create node")
+		return
+	}
+
+	return newNodes[0], nil
 }
 
 // DeleteNode 删除节点
@@ -156,7 +167,7 @@ func (c *Client) DeleteNode(elementId string) (nodes []neo4j.Node, err error) {
 	return c.executeQueryNode(cypher, params)
 }
 
-// QueryNodes 查询所有节点 page 从 0 开始
+// QueryNodes 查询所有节点 page 从 1 开始
 func (c *Client) QueryNodes(label string, page, limit int) (nodes []neo4j.Node, err error) {
 	param := map[string]any{}
 	var cypher string
@@ -167,8 +178,8 @@ func (c *Client) QueryNodes(label string, page, limit int) (nodes []neo4j.Node, 
 		cypher = fmt.Sprintf("MATCH (n:%s) RETURN n", label)
 	}
 
-	if page >= 0 {
-		skip := page * limit
+	if page > 0 {
+		skip := (page - 1) * limit
 		param["skip"] = skip
 		param["limit"] = limit
 		cypher = cypher + " ORDER BY elementId(n) SKIP $skip LIMIT $limit"
@@ -177,10 +188,10 @@ func (c *Client) QueryNodes(label string, page, limit int) (nodes []neo4j.Node, 
 	return c.executeQueryNode(cypher, param)
 }
 
-// QueryNodeByID 根据 ID 查询节点
-func (c *Client) QueryNodeByID(id string) (node neo4j.Node, err error) {
-	cypher := "MATCH (n) WHERE elementId(n) = $id RETURN n"
-	params := map[string]any{"id": id}
+// QueryNodeByID 根据 elementId 查询节点
+func (c *Client) QueryNodeByID(elementId string) (node neo4j.Node, exist bool, err error) {
+	cypher := "MATCH (n) WHERE elementId(n) = $elementId RETURN n"
+	params := map[string]any{"elementId": elementId}
 
 	nodes, err := c.executeQueryNode(cypher, params)
 	if err != nil {
@@ -188,11 +199,11 @@ func (c *Client) QueryNodeByID(id string) (node neo4j.Node, err error) {
 	}
 
 	if len(nodes) == 0 {
-		err = fmt.Errorf("node with id %s not found", id)
+		logger.GetLogger().Infof("node does not exist [%s]", elementId)
 		return
 	}
 
-	return nodes[0], nil
+	return nodes[0], true, nil
 }
 
 // QueryNode

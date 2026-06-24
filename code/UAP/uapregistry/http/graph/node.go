@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 
 	"uapregistry/logger"
 	graphstorage "uapregistry/storage/graph"
@@ -16,7 +17,17 @@ import (
 type NodeController struct {
 }
 
-// POST - HTTP /knowledgegraph/nodes/bulk
+// CreateBulk 批量创建节点
+// @Summary      批量创建节点
+// @Description  导入节点数组批量创建节点
+// @Tags         node
+// @Accept       json
+// @Produce      json
+// @Param        nodes   body      []neo4j.Node  true  "节点列表"
+// @Success      201  {array}  neo4j.Node
+// @Failure      422  {string}  string
+// @Failure      500  {string}  string
+// @Router       /knowledgegraph/nodes/bulk [POST]
 func (c *NodeController) CreateBulk(w http.ResponseWriter, r *http.Request) {
 	nodes, err := c.loadNodes(w, r)
 
@@ -24,15 +35,25 @@ func (c *NodeController) CreateBulk(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newNode, err := graphstorage.CreateNodes(nodes)
+	newNodes, err := graphstorage.CreateNodes(nodes)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
-		ResponseCodeBody(w, http.StatusCreated, newNode)
+		ResponseCodeBody(w, http.StatusCreated, newNodes)
 	}
 }
 
-// POST - HTTP /knowledgegraph/nodes
+// Create 创建单个节点
+// @Summary      创建单个节点
+// @Description  创建单个节点
+// @Tags         node
+// @Accept       json
+// @Produce      json
+// @Param        node   body      neo4j.Node  true  "节点信息"
+// @Success      201  {object}  neo4j.Node
+// @Failure      422  {string}  string
+// @Failure      500  {string}  string
+// @Router       /knowledgegraph/nodes [POST]
 func (c *NodeController) Create(w http.ResponseWriter, r *http.Request) {
 	node, err := c.loadNode(w, r)
 
@@ -48,7 +69,18 @@ func (c *NodeController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// PUT - HTTP /knowledgegraph/nodes/{elementId}
+// Put 更新单个节点
+// @Summary      更新单个节点
+// @Description  更新单个节点
+// @Tags         node
+// @Accept       json
+// @Produce      json
+// @Param        elementId   path      string  true  "旧节点elementId"
+// @Param        node   body      neo4j.Node  true  "节点信息"
+// @Success      201  {object}  neo4j.Node
+// @Failure      422  {string}  string
+// @Failure      500  {string}  string
+// @Router       /knowledgegraph/nodes/{elementId} [PUT]
 func (c *NodeController) Put(w http.ResponseWriter, r *http.Request) {
 	elementId := mux.Vars(r)["elementId"]
 
@@ -57,23 +89,49 @@ func (c *NodeController) Put(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nodes, err := graphstorage.UpdateNode(elementId, newNode)
+	node, err := graphstorage.UpdateNode(elementId, newNode)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
 	} else {
-		ResponseCodeBody(w, http.StatusCreated, nodes)
+		ResponseCodeBody(w, http.StatusCreated, node)
 	}
 }
 
-// Delete - HTTP /knowledgegraph/nodes/{elementId}
+// Delete 删除单个节点
+// @Summary      删除单个节点
+// @Description  删除单个节点
+// @Tags         node
+// @Accept       json
+// @Produce      json
+// @Param        elementId   path      string  true  "旧节点elementId"
+// @Param        force   query      bool  false  "是否强制删除，默认false，当存在相关的关系时不删除"
+// @Success      204  "删除成功"
+// @Failure      409  {string}  string "无法删除有关联的节点（force=false）"
+// @Failure      422  {string}  string "请求参数错误"
+// @Failure      500  {string}  string
+// @Router       /knowledgegraph/nodes/{elementId} [Delete]
 func (c *NodeController) Delete(w http.ResponseWriter, r *http.Request) {
 	elementId := mux.Vars(r)["elementId"]
+	forceStr := r.URL.Query().Get("force")
 
-	_, err := graphstorage.DeleteNode(elementId)
+	if forceStr == "" {
+		forceStr = "false"
+	}
+	force, err := strconv.ParseBool(forceStr)
 	if err != nil {
-		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
+		ResponseCodeBody(w, http.StatusUnprocessableEntity, err.Error())
+		return
+	}
+
+	canDelete, err := graphstorage.DeleteNode(elementId, force)
+	if err != nil {
+		if canDelete {
+			ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
+		} else {
+			ResponseCodeBody(w, http.StatusConflict, err.Error())
+		}
 	} else {
-		ResponseCodeBody(w, http.StatusNoContent, nil)
+		ResponseCodeBody(w, http.StatusNoContent, "")
 	}
 }
 
@@ -124,7 +182,19 @@ func (c *NodeController) GetNodesByName(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
-// GET - HTTP /knowledgegraph/nodes?page=1&limit=100&label=Person
+// GetNodes 查询节点列表
+// @Summary      查询节点列表
+// @Description  查询节点列表
+// @Tags         node
+// @Accept       json
+// @Produce      json
+// @Param        page   query      int      false  "分页参数,当前页数，从1开始,默认不分页"
+// @Param        limit  query      int      false  "分页参数，每页最大条数"
+// @Param        label  query      string   true   "节点标签, 默认为空，不区分标签"
+// @Success      200  {array}   neo4j.Node "查询成功"
+// @Failure      422  {string}  string
+// @Failure      500  {string}  string
+// @Router       /knowledgegraph/nodes [GET]
 func (c *NodeController) GetNodes(w http.ResponseWriter, r *http.Request) {
 	label := r.URL.Query().Get("label")
 	pageStr := r.URL.Query().Get("page")
@@ -147,15 +217,31 @@ func (c *NodeController) GetNodes(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// GetNodeByID 查询指定节点
+// @Summary      查询指定节点
+// @Description  查询指定节点
+// @Tags         node
+// @Accept       json
+// @Produce      json
+// @Param        elementId   path      string      true  "节点elementId"
+// @Success      200  {object}  neo4j.Node "查询成功"
+// @Failure      404  {string}  string "资源不存在"
+// @Failure      500  {string}  string
+// @Router       /knowledgegraph/nodes [GET]
 // GET - HTTP /knowledgegraph/nodes/{elementId}
 func (c *NodeController) GetNodeByID(w http.ResponseWriter, r *http.Request) {
 	elementId := mux.Vars(r)["elementId"]
 
-	node, err := graphstorage.QueryNodeByID(elementId)
+	node, exist, err := graphstorage.QueryNodeByID(elementId)
 	if err != nil {
 		ResponseCodeBody(w, http.StatusInternalServerError, err.Error())
-	} else {
+		return
+	}
+
+	if exist {
 		ResponseCodeBody(w, http.StatusOK, node)
+	} else {
+		ResponseCodeBody(w, http.StatusNotFound, "resource not found")
 	}
 }
 

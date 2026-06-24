@@ -1,6 +1,7 @@
 package graph
 
 import (
+	"fmt"
 	"uapregistry/logger"
 	neo4jclient "uapregistry/storage/graph/neo4j"
 	"uapregistry/types"
@@ -15,19 +16,19 @@ type Database interface {
 	CreateNode(node neo4j.Node) (newNode neo4j.Node, err error)
 	CreateNodes(nodes []neo4j.Node) (newNodes []neo4j.Node, err error)
 	DeleteNode(elementId string) (nodes []neo4j.Node, err error)
-	UpdateNode(elementId string, newNode neo4j.Node) (node []neo4j.Node, err error)
+	UpdateNode(elementId string, newNode neo4j.Node) (node neo4j.Node, err error)
 
 	CreateRelationship(relationship neo4j.Relationship) (newRelationship neo4j.Relationship, err error)
 	CreateRelationships(relationships []neo4j.Relationship) (newRelationships []neo4j.Relationship, err error)
-	UpdateRelationship(elementId string, propMap map[string]any) (newRelationship []neo4j.Relationship, err error)
+	UpdateRelationship(elementId string, propMap map[string]any) (newRelationship neo4j.Relationship, err error)
 	DeleteRelationship(elementId string) (newRelationship []neo4j.Relationship, err error)
 
-	QueryNodeByID(id string) (node neo4j.Node, err error)
+	QueryNodeByID(id string) (node neo4j.Node, exist bool, err error)
 	QueryNode(name, namespace, cluster string) (nodes []neo4j.Node, err error)
 	QueryNodes(label string, page, limit int) (nodes []neo4j.Node, err error)
 	QueryRelationshipsByNode(nodeId string) (relations []types.RelatedNode, err error)
 
-	QueryRelationship(elementId string) (relatinships []neo4j.Relationship, err error)
+	QueryRelationship(elementId string) (relatinships neo4j.Relationship, exist bool, err error)
 	QueryRelationships(typ string, page, limit int) (relatinships []neo4j.Relationship, err error)
 }
 
@@ -66,11 +67,28 @@ func CreateNodes(nodes []neo4j.Node) (newNodes []neo4j.Node, err error) {
 	return client.CreateNodes(nodes)
 }
 
-func DeleteNode(elementId string) (nodes []neo4j.Node, err error) {
-	return client.DeleteNode(elementId)
+func DeleteNode(elementId string, force bool) (canDelete bool, err error) {
+	if force {
+		_, err = client.DeleteNode(elementId)
+		return true, err
+	}
+
+	rels, err := client.QueryRelationshipsByNode(elementId)
+	if err != nil {
+		return
+	}
+
+	if len(rels) == 0 {
+		_, err = client.DeleteNode(elementId)
+		return true, err
+	}
+
+	err = fmt.Errorf("node[%s] has relationships[%d]", elementId, len(rels))
+	log.Info(err)
+	return false, err
 }
 
-func UpdateNode(elementId string, newNode neo4j.Node) (node []neo4j.Node, err error) {
+func UpdateNode(elementId string, newNode neo4j.Node) (node neo4j.Node, err error) {
 	return client.UpdateNode(elementId, newNode)
 }
 
@@ -85,7 +103,7 @@ func DeleteRelationship(elementId string) (nodes []neo4j.Relationship, err error
 	return client.DeleteRelationship(elementId)
 }
 
-func UpdateRelationship(elementId string, props map[string]any) (updatedRelation []neo4j.Relationship, err error) {
+func UpdateRelationship(elementId string, props map[string]any) (updatedRelation neo4j.Relationship, err error) {
 	return client.UpdateRelationship(elementId, props)
 }
 
@@ -93,7 +111,7 @@ func QueryNode(agentCardName, namespace, cluster string) (node []neo4j.Node, err
 	return client.QueryNode(agentCardName, namespace, getDefaultCluster(cluster))
 }
 
-func QueryNodeByID(elementId string) (node neo4j.Node, err error) {
+func QueryNodeByID(elementId string) (node neo4j.Node, exist bool, err error) {
 	return client.QueryNodeByID(elementId)
 }
 
@@ -109,7 +127,7 @@ func QueryRelationships(typ string, page, limit int) (node []neo4j.Relationship,
 	return client.QueryRelationships(typ, page, limit)
 }
 
-func QueryRelationship(elementId string) (node []neo4j.Relationship, err error) {
+func QueryRelationship(elementId string) (node neo4j.Relationship, exist bool, err error) {
 	return client.QueryRelationship(elementId)
 }
 

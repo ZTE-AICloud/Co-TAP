@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"time"
+	"uapregistry/logger"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
@@ -80,7 +81,7 @@ func (c *Client) generateCreateRelationParams(relationship neo4j.Relationship) (
 }
 
 // UpdateRelationship 只能更行Properties
-func (c *Client) UpdateRelationship(elementId string, props map[string]any) (relations []neo4j.Relationship, err error) {
+func (c *Client) UpdateRelationship(elementId string, props map[string]any) (relation neo4j.Relationship, err error) {
 	// 动态组装原子覆盖 Cypher 语句
 	//
 	cypherQuery := `
@@ -97,7 +98,20 @@ func (c *Client) UpdateRelationship(elementId string, props map[string]any) (rel
 		"props":     props,
 	}
 
-	return c.executeQueryRelationship(cypherQuery, params)
+	relations, err := c.executeQueryRelationship(cypherQuery, params)
+	if err != nil {
+		return
+	}
+
+	if len(relations) != 1 {
+		err = fmt.Errorf("updated relationship len is %d", len(relations))
+		logger.GetLogger().Error(err.Error())
+		return
+	}
+
+	relation = relations[0]
+
+	return
 }
 
 func (c *Client) DeleteRelationship(elementId string) (relationships []neo4j.Relationship, err error) {
@@ -132,7 +146,7 @@ func (c *Client) executeQueryRelationship(cypher string, params map[string]any) 
 	return
 }
 
-// QueryRelationships 查询所有节点 page 从 0 开始
+// QueryRelationships 查询所有节点 page 从 1 开始
 func (c *Client) QueryRelationships(typ string, page, limit int) (nodes []neo4j.Relationship, err error) {
 	param := map[string]any{}
 	var cypher string
@@ -143,8 +157,8 @@ func (c *Client) QueryRelationships(typ string, page, limit int) (nodes []neo4j.
 		cypher = fmt.Sprintf("MATCH ()-[r:%s]->() RETURN r", typ)
 	}
 
-	if page >= 0 {
-		skip := page * limit
+	if page >= 1 {
+		skip := (page - 1) * limit
 		param["skip"] = skip
 		param["limit"] = limit
 		cypher = cypher + " ORDER BY elementId(r) SKIP $skip LIMIT $limit"
@@ -154,11 +168,20 @@ func (c *Client) QueryRelationships(typ string, page, limit int) (nodes []neo4j.
 }
 
 // QueryRelationship
-func (c *Client) QueryRelationship(elementId string) (nodes []neo4j.Relationship, err error) {
+func (c *Client) QueryRelationship(elementId string) (node neo4j.Relationship, exist bool, err error) {
 	param := map[string]any{}
 	param["elementId"] = elementId
 
 	cypher := "MATCH ()-[r]->() WHERE elementId(r) = $elementId RETURN r"
 
-	return c.executeQueryRelationship(cypher, param)
+	relations, err := c.executeQueryRelationship(cypher, param)
+	if err != nil {
+		return
+	}
+
+	if len(relations) == 0 {
+		return
+	}
+
+	return relations[0], true, err
 }

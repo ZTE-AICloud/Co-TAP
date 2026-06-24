@@ -165,5 +165,5 @@ func (s *HTTPServer) registGraphHandlers() {
 
 	s.router.HandleFunc("/knowledgegraph/relationships/{elementId}", relationshipController.GetRelationship).Methods(http.MethodGet)
 	// /knowledgegraph/relationships?page=0&limit=100&type=depend
-	s.router.HandleFunc("/knowledgegraph/relationships", relationshipController.GetNodes).Methods(http.MethodGet)
+	s.router.HandleFunc("/knowledgegraph/relationships", relationshipController.GetRelationships).Methods(http.MethodGet)
 }

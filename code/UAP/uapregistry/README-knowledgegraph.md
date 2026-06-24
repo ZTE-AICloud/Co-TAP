@@ -28,3 +28,8 @@ https://neo4j.com/docs/operations-manual/current/installation/
 ```bash
 curl -X GET http://127.0.0.1:8080/knowledgegraph/graph
 ```
+# 生成openapi 接口文档
+
+```bash
+swag init --parseDependency --parseInternal  -p pascalcase  -g main.go --v3.1 -o ./docs
+```

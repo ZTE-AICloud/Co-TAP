@@ -28,8 +28,8 @@ func parsePaginationParams(pageStr, limitStr string) (page, limit int, err error
 		return
 	}
 
-	if page < 0 || limit <= 0 {
-		err = fmt.Errorf("pagination param is invalid,page: %s, limit:%s", pageStr, limitStr)
+	if page < 1 || limit <= 0 {
+		err = fmt.Errorf("pagination param is invalid, page should be started from 1,page: %s, limit:%s", pageStr, limitStr)
 		logger.GetLogger().Error(err.Error())
 	}
 
@@ -51,10 +51,9 @@ func ResponseCodeBody(w http.ResponseWriter, code int, body any) {
 			return
 		}
 
+		w.WriteHeader(code)
 		if _, err := w.Write(bs); err != nil {
 			logger.GetLogger().Errorf("failed to write response body， code:%d, body: %s, :%v", code, string(bs), err)
 		}
-
 	}
-	w.WriteHeader(code)
 }

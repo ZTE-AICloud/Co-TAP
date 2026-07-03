@@ -39,7 +39,7 @@ func (svcManager *ServiceManager) GetService(serviceName string) (svcs []*t.Serv
 	return svcManager.localHandler.GetServicesByName(serviceName)
 }
 
-func (svcManager *ServiceManager) SemanticSearch(ssq *types.SemanticSearchRequest) (svcs []*t.Service, err error) {
+func (svcManager *ServiceManager) SemanticSearch(ssq *types.SemanticSearchRequest) (*types.SemanticSearchResponse, error) {
 	return svcManager.localHandler.SemanticSearch(ssq)
 }
 

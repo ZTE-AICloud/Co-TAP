@@ -26,27 +26,27 @@ func (t *Timestamp) UnmarshalJSON(data []byte) error {
 }
 
 type Service struct {
-	ID               string               `json:"id"`
-	Ephemeral        bool                 `json:"ephemeral"`
-	CreatedAt        Timestamp            `json:"created_at"`
-	UpdatedAt        Timestamp            `json:"updated_at"`
-	Name             string               `json:"name"`
-	Retries          int                  `json:"retries"`
-	Protocol         string               `json:"protocol"`
-	Host             string               `json:"host"`
-	Port             int                  `json:"port"`
-	Path             string               `json:"path"`
-	ConnectTimeout   uint64               `json:"connect_timeout"`
-	WriteTimeout     uint64               `json:"write_timeout"`
-	ReadTimeout      uint64               `json:"read_timeout"`
-	Tags             []string             `json:"tags,omitempty"`
-	AgentProtocol    string               `json:"agent_protocol"`
-	AgentInfo        *AgentInfo           `json:"agent_info"`
-	AgentInfoUrl     string               `json:"agent_info_url"`
-	Index            uint64               `json:"index"`
-	HealthStatus     string               `json:"health_status"`
-	EphemeralCheck   *EphemeralCheckInfo  `json:"ephemeral_check,omitempty"`
-	PersistentCheck  *PersistentCheckInfo `json:"persistent_check,omitempty"`
+	ID              string               `json:"id"`
+	Ephemeral       bool                 `json:"ephemeral"`
+	CreatedAt       Timestamp            `json:"created_at"`
+	UpdatedAt       Timestamp            `json:"updated_at"`
+	Name            string               `json:"name"`
+	Retries         int                  `json:"retries"`
+	Protocol        string               `json:"protocol"`
+	Host            string               `json:"host"`
+	Port            int                  `json:"port"`
+	Path            string               `json:"path"`
+	ConnectTimeout  uint64               `json:"connect_timeout"`
+	WriteTimeout    uint64               `json:"write_timeout"`
+	ReadTimeout     uint64               `json:"read_timeout"`
+	Tags            []string             `json:"tags,omitempty"`
+	AgentProtocol   string               `json:"agent_protocol"`
+	AgentInfo       *AgentInfo           `json:"agent_info"`
+	AgentInfoUrl    string               `json:"agent_info_url"`
+	Index           uint64               `json:"index"`
+	HealthStatus    string               `json:"health_status"`
+	EphemeralCheck  *EphemeralCheckInfo  `json:"ephemeral_check,omitempty"`
+	PersistentCheck *PersistentCheckInfo `json:"persistent_check,omitempty"`
 }
 
 type AgentInfo struct {
@@ -91,4 +91,13 @@ type SemanticSearchRequest struct {
 	SortBy               SortBy                `json:"sort_by,omitempty"`
 	IncludeExplanation   bool                  `json:"include_explanation,omitempty"`
 	AllowPartialMatches  bool                  `json:"allow_partial_matches,omitempty"`
+}
+
+type ServiceWithSimilarity struct {
+	Service    *Service `json:"service"`
+	Similarity float32  `json:"similarity"`
+}
+
+type SemanticSearchResponse struct {
+	Results []*ServiceWithSimilarity `json:"results"`
 }

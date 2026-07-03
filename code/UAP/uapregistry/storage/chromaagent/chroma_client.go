@@ -387,6 +387,18 @@ func buildWhereFilter(cqr *ChromaQueryRequest) chroma.WhereFilter {
 	return chroma.And(conditions...)
 }
 
+// similarityToDistance 将相似度阈值转换为距离阈值
+// similarity = 1 - distance/2  =>  distance = 2 * (1 - similarity)
+func similarityToDistance(similarity float32) float32 {
+	return 2 * (1 - similarity)
+}
+
+// distanceToSimilarity 将距离转换为相似度
+// similarity = 1 - distance/2
+func distanceToSimilarity(distance float32) float32 {
+	return 1 - distance/2
+}
+
 func queryFilter(res chroma.QueryResult, threshold float32) (chroma.QueryResult, error) {
 	idGroups := res.GetIDGroups()
 	if len(idGroups) == 0 || len(idGroups[0]) == 0 {
@@ -403,9 +415,13 @@ func queryFilter(res chroma.QueryResult, threshold float32) (chroma.QueryResult,
 	var filteredMetadatas chroma.DocumentMetadatas
 	var filteredDocuments chroma.Documents
 
+	// 将相似度阈值转换为距离阈值（distance 越小，相似度越高）
+	// similarity >= threshold  =>  distance <= 2*(1-threshold)
+	maxDistance := embeddings.Distance(similarityToDistance(threshold))
+
 	for i := range ids {
-		similarityScore := 1 - float32(distances[i])/2
-		if threshold > 0 && similarityScore < threshold {
+		// threshold > 0 时才进行过滤，使用 distance 直接比较
+		if threshold > 0 && distances[i] > maxDistance {
 			continue
 		}
 		filteredIDs = append(filteredIDs, ids[i])
@@ -414,7 +430,6 @@ func queryFilter(res chroma.QueryResult, threshold float32) (chroma.QueryResult,
 		filteredDocuments = append(filteredDocuments, documents[i])
 	}
 
-	// 4. 组装返回结果
 	filteredResult := &chroma.QueryResultImpl{
 		IDLists:         []chroma.DocumentIDs{filteredIDs},
 		DistancesLists:  []embeddings.Distances{filteredDistances},

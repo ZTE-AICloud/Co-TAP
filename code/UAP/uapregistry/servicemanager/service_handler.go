@@ -50,20 +50,26 @@ func (svcHandler *ServiceHandler) PostService(svc *t.Service, overWrite bool) (*
 	return svc, http.StatusCreated, nil
 }
 
-func (svcHandler *ServiceHandler) SemanticSearch(ssq *types.SemanticSearchRequest) ([]*t.Service, error) {
+func (svcHandler *ServiceHandler) SemanticSearch(ssq *types.SemanticSearchRequest) (*types.SemanticSearchResponse, error) {
 	logger.GetLogger().Info("query agent id by agent description")
-	svcIDs, err := svcHandler.chromaAgent.QueryTopNAgents(ssq)
+	results, err := svcHandler.chromaAgent.QueryTopNAgents(ssq)
 	if err != nil {
 		svcHandler.log.Errorf("(agentDescription:%s)Failed to semantic search: %v", ssq.Query, err)
 		return nil, err
 	}
 
-	var services []*types.Service
-	for _, svcID := range svcIDs{
-		services = append(services, cache.GetServicesCache().GetServiceByID(svcID))
+	var responseResults []*types.ServiceWithSimilarity
+	for _, result := range results {
+		svc := cache.GetServicesCache().GetServiceByID(result.AgentID)
+		if svc != nil {
+			responseResults = append(responseResults, &types.ServiceWithSimilarity{
+				Service:    svc,
+				Similarity: result.Similarity,
+			})
+		}
 	}
-	
-	return services, nil
+
+	return &types.SemanticSearchResponse{Results: responseResults}, nil
 }
 
 func isServiceIDExist(svcs []*t.Service, id string) bool {

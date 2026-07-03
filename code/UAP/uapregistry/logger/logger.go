@@ -293,7 +293,7 @@ func getGoPath() []string {
 	} else if strings.Contains(goPath, ":") { //linux
 		return strings.Split(goPath, ":")
 	} else { //only one
-		path := make([]string, 1, 1)
+		path := make([]string, 1)
 		path[0] = goPath
 		return path
 	}
